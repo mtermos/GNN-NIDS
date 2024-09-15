@@ -5,10 +5,10 @@ import seaborn as sns
 from sklearn.feature_selection import VarianceThreshold
 
 
-def prepare_dataset(df, drop_columns, label_col):
-    df.drop(drop_columns, axis=1, inplace=True)
-    df.drop(label_col, axis=1, inplace=True)
-    return df
+def prepare_dataset(original_df, drop_columns, label_col):
+    cleaned_df = original_df.drop(drop_columns, axis=1)
+    cleaned_df = cleaned_df.drop(label_col, axis=1)
+    return cleaned_df
 
 
 def apply_variance_threshold(df, threshold):
@@ -38,7 +38,7 @@ def apply_correlation_threshold(df, threshold):
 
 
 def feature_analysis_pipeline(df, drop_columns, label_col, var_threshold=0.00, corr_threshold=0.75):
-    df = prepare_dataset(df, drop_columns, label_col)
-    df, var_dropped = apply_variance_threshold(df, var_threshold)
-    df, corr_dropped = apply_correlation_threshold(df, corr_threshold)
-    return df, var_dropped, corr_dropped
+    new_df = prepare_dataset(df, drop_columns, label_col)
+    new_df, var_dropped = apply_variance_threshold(new_df, var_threshold)
+    new_df, corr_dropped = apply_correlation_threshold(new_df, corr_threshold)
+    return new_df, var_dropped, corr_dropped
