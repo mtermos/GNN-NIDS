@@ -9,15 +9,15 @@ class GATLayer(nn.Module):
     # edim = 55
     # out_dim = z = 55 * 2
 
-    def __init__(self, in_dim, out_dim, edim, activation):
+    def __init__(self, ndim_in, edim, ndim_out, activation):
         super(GATLayer, self).__init__()
         # equation (1)
 #        print(edim)
-        self.linear = nn.Linear(in_dim + edim, edim, bias=False)
-        self.W_apply = nn.Linear(out_dim + edim, in_dim)
+        self.linear = nn.Linear(ndim_in + edim, ndim_out, bias=False)
+        self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
         # equation (2)
 
-        self.attn_fc = nn.Linear(2*edim, 1)
+        self.attn_fc = nn.Linear(2*ndim_in, 1)
         self.reset_parameters()
         # print("OK1")
 
@@ -63,7 +63,7 @@ class GATLayer(nn.Module):
         # equation (4)
 #         z = th.mean(alpha * nodes.mailbox['m'],dim=1)
         z = th.sum(alpha * nodes.mailbox['m'], dim=1)
-      #  print(f'z.shape={z.shape}')
+        # print(f'z.shape={z.shape}')
         # z = th.reshape(z, (z.shape[0], 1,z.shape[2]))
         # print("DONE9")
         # print
@@ -103,13 +103,13 @@ class GATLayer(nn.Module):
 
 
 class GAT(nn.Module):
-    def __init__(self, in_size, out_size, edim, activation, dropout):
+    def __init__(self, ndim_in, edim, ndim_out, activation, dropout):
         super().__init__()
        # self.layers = nn.ModuleList([
         self.layers = nn.ModuleList()
-        self.layers.append(GATLayer(in_size, 55, edim, activation))
+        self.layers.append(GATLayer(ndim_in, edim, 55, activation))
 
-        self.layers.append(GATLayer(55, out_size, edim, activation))
+        self.layers.append(GATLayer(55, edim, ndim_out, activation))
         self.dropout = nn.Dropout(p=dropout)
 
        # print("DONE")
@@ -155,9 +155,9 @@ class MLPPredictor(nn.Module):
 
 
 class EGAT(nn.Module):
-    def __init__(self, ndim_in, ndim_out, edim, activation, dropout, residual):
+    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, residual):
         super().__init__()
-        self.gnn = GAT(ndim_in, ndim_out, edim, activation, dropout)
+        self.gnn = GAT(ndim_in, edim, ndim_out, activation, dropout)
 
         self.pred = MLPPredictor(ndim_out, edim, 2, residual)
         # print("DONE")

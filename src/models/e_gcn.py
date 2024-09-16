@@ -4,11 +4,11 @@ import torch.nn.functional as F
 import dgl.function as fn
 
 
-class SAGELayer(nn.Module):
-    def __init__(self, ndim_in, edims, ndim_out, activation):
-        super(SAGELayer, self).__init__()
+class GCNLayer(nn.Module):
+    def __init__(self, ndim_in, edim, ndim_out, activation):
+        super(GCNLayer, self).__init__()
         # force to outut fix dimensions
-        self.W_msg = nn.Linear(ndim_in + edims, ndim_out)
+        self.W_msg = nn.Linear(ndim_in + edim, ndim_out)
         # apply weight
         self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
         self.activation = activation
@@ -29,12 +29,12 @@ class SAGELayer(nn.Module):
             return g.ndata['h']
 
 
-class SAGE(nn.Module):
+class GCN(nn.Module):
     def __init__(self, ndim_in, edim, ndim_out, activation, dropout):
-        super(SAGE, self).__init__()
+        super(GCN, self).__init__()
         self.layers = nn.ModuleList()
-        self.layers.append(SAGELayer(ndim_in, edim, 128, activation))
-        self.layers.append(SAGELayer(128, edim, ndim_out, activation))
+        self.layers.append(GCNLayer(ndim_in, edim, 128, activation))
+        self.layers.append(GCNLayer(128, edim, ndim_out, activation))
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, g, nfeats, efeats):
@@ -77,7 +77,7 @@ class MLPPredictor(nn.Module):
 class EGCN(nn.Module):
     def __init__(self, ndim_in, edim, ndim_out, activation, dropout, residual):
         super().__init__()
-        self.gnn = SAGE(ndim_in, edim, ndim_out, activation, dropout)
+        self.gnn = GCN(ndim_in, edim, ndim_out, activation, dropout)
         self.pred = MLPPredictor(ndim_out, edim, 2, residual)
 
     def forward(self, g, nfeats, efeats):

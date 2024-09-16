@@ -44,7 +44,7 @@ class DatasetInfo:
 
 datasets_list = [
     DatasetInfo(name="cic_ton_iot_5_percent",
-                path="./testing_dfs/cic_ton_iot_5_percent.parquet",
+                path="datasets/cic_ton_iot_5_percent/cic_ton_iot_5_percent.parquet",
                 file_type="parquet",
                 src_ip_col="Src IP",
                 src_port_col="Src Port",
@@ -82,7 +82,7 @@ datasets_list = [
                               'Flow Duration', 'Flow IAT Max', 'Flow IAT Mean', 'Flow IAT Min', 'Flow Pkts/s', 'Fwd IAT Mean', 'Fwd IAT Tot', 'Fwd Pkt Len Max', 'Fwd Pkt Len Mean', 'Fwd Pkt Len Std', 'Fwd Seg Size Avg', 'Idle Mean', 'PSH Flag Cnt', 'Pkt Len Max', 'Pkt Len Mean', 'Pkt Len Std', 'Pkt Len Var', 'Pkt Size Avg', 'Tot Bwd Pkts', 'TotLen Bwd Pkts']
                 ),
     DatasetInfo(name="cic_ids_2017_5_percent",
-                path="./testing_dfs/cic_ids_2017_5_percent.parquet",
+                path="datasets/cic_ids_2017_5_percent/cic_ids_2017_5_percent.parquet",
                 file_type="parquet",
                 src_ip_col="Src IP",
                 src_port_col="Src Port",

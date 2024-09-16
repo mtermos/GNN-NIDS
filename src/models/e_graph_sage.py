@@ -6,17 +6,16 @@ import dgl
 
 
 class SAGELayer(nn.Module):
-    def __init__(self, ndim_in, edims, ndim_out, activation, num_neighbors):
+    def __init__(self, ndim_in, edim, ndim_out, activation, num_neighbors):
         super(SAGELayer, self).__init__()
         # force to outut fix dimensions
-        self.W_msg = nn.Linear(ndim_in + edims, ndim_out)
+        self.W_msg = nn.Linear(ndim_in + edim, ndim_out)
         # apply weight
         self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
         self.activation = activation
         self.num_neighbors = num_neighbors
 
     def message_func(self, edges):
-
         return {'m': self.W_msg(th.cat([edges.src['h'], edges.data['h']], 2))}
 
     def forward(self, g_dgl, nfeats, efeats):
@@ -45,28 +44,15 @@ class SAGELayer(nn.Module):
 
 
 class SAGE(nn.Module):
-    def __init__(self, ndim_in, ndim_out, edim, activation, dropout, num_neighbors):
+    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, num_neighbors):
         super(SAGE, self).__init__()
         self.conv1 = SAGELayer(ndim_in, edim, 128, activation, num_neighbors)
         self.conv2 = SAGELayer(128, edim, ndim_out, activation, num_neighbors)
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, g, nfeats, efeats):
-        # for i, layer in enumerate(self.layers):
-        #   if i != 0:
-        #  nfeats = self.dropout(nfeats)
-        # h_dst = x[:mfgs[0].num_dst_nodes()]
-        # edge_features=[]
-        # node_features=[]
-       # for node_idx in range (G.num_nodes()):
-        #        neighbor_feats=extract_sampled_features(node_idx, s, G.edata['h'])
-        #       edge_features.append(neighbor_feats)
-        # for node_idx in range (G.num_nodes()):
-        #   neighbor_feats=extract_sampled_features(node_idx, s, G.ndata['h'])
-        #  node_features.append(neighbor_feats)
         nfeats = self.conv1(g, nfeats, efeats)
-        # print("ok2")
-
+        nfeats = self.dropout(nfeats)
         nfeats = self.conv2(g, nfeats, efeats)
 
         return nfeats.sum(1)
