@@ -63,7 +63,7 @@ datasets_list = [
                               'CWE Flag Count', 'Bwd IAT Tot', 'Fwd IAT Mean', 'Fwd Pkt Len Std', 'Pkt Len Mean', 'Flow IAT Min', 'TotLen Bwd Pkts', 'Bwd Pkt Len Max', 'Pkt Len Var', 'FIN Flag Cnt', 'Bwd IAT Mean', 'Idle Mean', 'Pkt Len Max', 'Flow Pkts/s', 'Flow Duration', 'Pkt Len Std', 'Fwd IAT Tot', 'PSH Flag Cnt', 'Active Mean', 'Bwd Pkt Len Std', 'Fwd Pkt Len Mean']
                 ),
     DatasetInfo(name="cic_ton_iot",
-                path="cic_ton_iot.parquet",
+                path="datasets/cic_ton_iot/cic_ton_iot.parquet",
                 file_type="parquet",
                 src_ip_col="Src IP",
                 src_port_col="Src Port",

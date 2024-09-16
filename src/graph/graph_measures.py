@@ -13,7 +13,10 @@ def calculate_graph_measures(G, file_path=None):
     degrees = [degree for _, degree in G.degree()]
     properties["max_degree"] = max(degrees)
     properties["avg_degree"] = sum(degrees) / len(degrees)
-    properties["transitivity"] = nx.transitivity(G)
+
+    if type(G) == nx.DiGraph or type(G) == nx.Graph:
+        properties["transitivity"] = nx.transitivity(G)
+
     properties["density"] = nx.density(G)
 
     G1 = ig.Graph.from_networkx(G)
@@ -21,7 +24,8 @@ def calculate_graph_measures(G, file_path=None):
 
     communities = []
     for com in part:
-        communities.append([G1.vs[node_index]['label'] for node_index in com])
+        communities.append([G1.vs[node_index]['_nx_name']
+                           for node_index in com])
 
     properties["number_of_communities"] = len(communities)
 

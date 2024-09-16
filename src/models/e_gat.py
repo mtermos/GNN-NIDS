@@ -126,33 +126,40 @@ class GAT(nn.Module):
 
 
 class MLPPredictor(nn.Module):
-    def __init__(self, in_features, out_classes):
+    def __init__(self, in_features, edim, out_classes, residual):
         super().__init__()
-        self.W = nn.Linear(2*in_features, out_classes)
-        # print('hello1')
+        self.residual = residual
+        if residual:
+            self.W = nn.Linear(in_features * 2 + edim, out_classes)
+        else:
+            self.W = nn.Linear(in_features * 2, out_classes)
 
     def apply_edges(self, edges):
         h_u = edges.src['h']
+
         h_v = edges.dst['h']
-        # print('hello3')
-        score = self.W(th.cat([h_u, h_v], 1))
-        # print('hello4')
+        if self.residual:
+            h_uv = edges.data['h']
+            h_uv = h_uv.view(h_uv.shape[0], h_uv.shape[2])
+            score = self.W(th.cat([h_u, h_v, h_uv], 1))
+        else:
+            score = self.W(th.cat([h_u, h_v], 1))
+
         return {'score': score}
 
     def forward(self, graph, h):
         with graph.local_scope():
             graph.ndata['h'] = h
-         #   print('hello2')
             graph.apply_edges(self.apply_edges)
             return graph.edata['score']
 
 
 class EGAT(nn.Module):
-    def __init__(self, ndim_in, ndim_out, edim, activation, dropout):
+    def __init__(self, ndim_in, ndim_out, edim, activation, dropout, residual):
         super().__init__()
         self.gnn = GAT(ndim_in, ndim_out, edim, activation, dropout)
 
-        self.pred = MLPPredictor(ndim_out, 2)
+        self.pred = MLPPredictor(ndim_out, edim, 2, residual)
         # print("DONE")
 
     def forward(self, g, nfeats, efeats):
