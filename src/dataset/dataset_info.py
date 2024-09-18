@@ -100,7 +100,7 @@ datasets_list = [
                               'Subflow Bwd Pkts', 'Bwd IAT Std', 'Fwd IAT Mean', 'Fwd Pkt Len Std', 'Pkt Len Mean', 'Flow IAT Std', 'Fwd URG Flags', 'TotLen Bwd Pkts', 'Bwd Pkt Len Max',  'Pkt Len Var',  'Tot Fwd Pkts', 'Bwd IAT Mean', 'TotLen Fwd Pkts', 'Fwd PSH Flags', 'Idle Mean', 'Pkt Len Max', 'Flow Pkts/s', 'Flow Duration', 'Pkt Len Std', 'Fwd IAT Max',  'Fwd IAT Tot', 'RST Flag Cnt', 'Subflow Bwd Byts', 'Active Mean', 'Bwd Pkt Len Std', 'Fwd Pkt Len Mean']
                 ),
     DatasetInfo(name="cic_ids_2017",
-                path="./datasets/cic_ids_2017.parquet",
+                path="datasets/cic_ids_2017/cic_ids_2017.parquet",
                 file_type="parquet",
                 src_ip_col="Src IP",
                 src_port_col="Src Port",
