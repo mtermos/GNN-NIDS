@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import dgl
 import dgl.function as fn
-from dgl.nn.pytorch import GraphConv
+from dgl.nn.pytorch import SAGEConv
 
 
 class MLPPredictor(nn.Module):
@@ -34,19 +34,22 @@ class MLPPredictor(nn.Module):
         return self.predict(feats)
 
 
-class GCN(nn.Module):
+class GRAPHSAGE(nn.Module):
     def __init__(self,
                  gcn_in_size,
                  gcn_hid_size=128,
                  gcn_out_size=128,
                  gcn_dropout=0.2,
+                 aggregator_type="gcn",
                  mlp_hid_size=200,
                  n_classes=2,
                  mlp_dropout=0.2):
 
         super().__init__()
-        self.conv1 = GraphConv(gcn_in_size, gcn_hid_size, activation=F.relu)
-        self.conv2 = GraphConv(gcn_hid_size, gcn_out_size, activation=F.relu)
+        self.conv1 = SAGEConv(gcn_in_size, gcn_hid_size,
+                              aggregator_type, activation=F.relu)
+        self.conv2 = SAGEConv(gcn_hid_size, gcn_out_size,
+                              aggregator_type, activation=F.relu)
 
         if n_classes == 2:
             self.predictor = MLPPredictor(
