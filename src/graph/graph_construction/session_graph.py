@@ -4,21 +4,25 @@ import os
 import time
 
 
-def define_sessions(df, src_ip_col, dst_ip_col, src_port_col, dst_port_col, protocol_col, timeout):
+def define_sessions(df, src_ip_col, dst_ip_col, src_port_col, dst_port_col, protocol_col=None, timeout=pd.Timedelta(minutes=5)):
     df = df.sort_values(by='timestamp')
     sessions = []
     current_session_id = 0
     last_seen = {}
 
     for index, row in df.iterrows():
-        five_tuple = (row[src_ip_col], row[dst_ip_col],
+        if protocol_col:
+            tuples = (row[src_ip_col], row[dst_ip_col],
                       row[src_port_col], row[dst_port_col], row[protocol_col])
-        if five_tuple in last_seen:
-            if row['timestamp'] - last_seen[five_tuple] > timeout:
+        else:
+            tuples = (row[src_ip_col], row[dst_ip_col],
+                      row[src_port_col], row[dst_port_col])
+        if tuples in last_seen:
+            if row['timestamp'] - last_seen[tuples] > timeout:
                 current_session_id += 1
         else:
             current_session_id += 1
-        last_seen[five_tuple] = row['timestamp']
+        last_seen[tuples] = row['timestamp']
         sessions.append(current_session_id)
 
     df['session_id'] = sessions

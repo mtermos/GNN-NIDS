@@ -30,6 +30,8 @@ def create_weightless_window_graph(df, src_ip_col, dst_ip_col, window_size=20000
         print(f"==>> number_of_groups: {number_of_groups}")
 
         if test_percentage:
+            folder_path += "_train_test"
+
             number_of_test_groups = math.ceil(
                 number_of_groups * test_percentage / 100)
 
@@ -62,7 +64,6 @@ def create_weightless_window_graph(df, src_ip_col, dst_ip_col, window_size=20000
                     nx.write_gexf(G, filename)
 
                 if file_type == "pkl":
-                    filename = os.path.join(folder_path, f'graph_{i}.pkl')
                     if test_percentage:
                         if i < number_of_train_groups:
 
@@ -78,6 +79,13 @@ def create_weightless_window_graph(df, src_ip_col, dst_ip_col, window_size=20000
                             os.makedirs(folder_path_test, exist_ok=True)
                             filename = os.path.join(
                                 folder_path_test, f'graph_{i}.pkl')
+                    else:
+                        folder_path_all = os.path.join(
+                            folder_path, 'graphs')
+                        os.makedirs(folder_path_all, exist_ok=True)
+                        filename = os.path.join(
+                            folder_path_all, f'graph_{i}.pkl')
+
                     # Save the graph to a file
                     with open(filename, "wb") as f:
                         pickle.dump(G, f)
