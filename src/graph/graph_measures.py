@@ -55,26 +55,17 @@ def calculate_graph_measures(G, file_path=None, verbose=False):
 
     start_time = timeit.default_timer()
     G1 = ig.Graph.from_networkx(G)
-    # G2 = ig.Graph()
-    # G2.community_optimal_modularity
-    # G2.community_fastgreedy
-    # G2.community_edge_betweenness
-    # G2.community_label_propagation
-    # G2.community_leading_eigenvector
-    # G2.community_leiden
-    # G2.community_multilevel
-    # G2.community_walktrap
 
     # part = G1.community_infomap()
-    # part = G1.community_multilevel()
-    # part = G1.community_spinglass()
-    part = G1.community_edge_betweenness()
+    # part = G1.community_label_propagation()
+    part = G1.community_leading_eigenvector()
 
     communities = []
     for com in part:
         communities.append([G1.vs[node_index]['_nx_name']
                            for node_index in com])
 
+    # communities = nx.community.louvain_communities(G)
     number_of_communities = len(communities)
     if verbose:
         print(
