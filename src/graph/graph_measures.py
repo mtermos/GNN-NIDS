@@ -38,13 +38,13 @@ def calculate_graph_measures(G, file_path=None, verbose=False):
             f"==>> avg_degree: {avg_degree}, in {str(timeit.default_timer() - start_time)} seconds")
     properties["avg_degree"] = avg_degree
 
-    if type(G) == nx.DiGraph or type(G) == nx.Graph:
-        start_time = timeit.default_timer()
-        transitivity = nx.transitivity(G)
-        if verbose:
-            print(
-                f"==>> transitivity: {transitivity}, in {str(timeit.default_timer() - start_time)} seconds")
-        properties["transitivity"] = transitivity
+    # if type(G) == nx.DiGraph or type(G) == nx.Graph:
+    #     start_time = timeit.default_timer()
+    #     transitivity = nx.transitivity(G)
+    #     if verbose:
+    #         print(
+    #             f"==>> transitivity: {transitivity}, in {str(timeit.default_timer() - start_time)} seconds")
+    #     properties["transitivity"] = transitivity
 
     start_time = timeit.default_timer()
     density = nx.density(G)
@@ -55,7 +55,20 @@ def calculate_graph_measures(G, file_path=None, verbose=False):
 
     start_time = timeit.default_timer()
     G1 = ig.Graph.from_networkx(G)
-    part = G1.community_infomap()
+    # G2 = ig.Graph()
+    # G2.community_optimal_modularity
+    # G2.community_fastgreedy
+    # G2.community_edge_betweenness
+    # G2.community_label_propagation
+    # G2.community_leading_eigenvector
+    # G2.community_leiden
+    # G2.community_multilevel
+    # G2.community_walktrap
+
+    # part = G1.community_infomap()
+    # part = G1.community_multilevel()
+    # part = G1.community_spinglass()
+    part = G1.community_edge_betweenness()
 
     communities = []
     for com in part:
