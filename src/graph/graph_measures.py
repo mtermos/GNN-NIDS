@@ -56,16 +56,10 @@ def calculate_graph_measures(G, file_path=None, verbose=False):
     start_time = timeit.default_timer()
     G1 = ig.Graph.from_networkx(G)
 
-<<<<<<< HEAD
     part = G1.community_infomap()
     # part = G1.community_multilevel()
     # part = G1.community_spinglass()
     # part = G1.community_edge_betweenness()
-=======
-    # part = G1.community_infomap()
-    # part = G1.community_label_propagation()
-    part = G1.community_leading_eigenvector()
->>>>>>> fa1dce6e8a19e7252b0c8142ec5c25de9cde39f8
 
     communities = []
     for com in part:
