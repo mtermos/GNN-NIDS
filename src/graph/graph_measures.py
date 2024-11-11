@@ -12,7 +12,7 @@ def time_execution(func):
     def wrapper(*args, **kwargs):
         # Check if verbose is in kwargs, defaulting to False if not provided
         verbose = kwargs.get("verbose", False)
-        if not verbose:
+        if verbose:
             start_time = timeit.default_timer()
             result = func(*args, **kwargs)
             print(

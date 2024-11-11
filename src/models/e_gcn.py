@@ -2,6 +2,7 @@ import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
 import dgl.function as fn
+import dgl
 
 
 class GCNLayer(nn.Module):
@@ -10,22 +11,32 @@ class GCNLayer(nn.Module):
         # force to outut fix dimensions
         self.W_msg = nn.Linear(ndim_in + edim, ndim_out)
         # apply weight
-        self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
+        self.W_apply = nn.Linear(ndim_out, ndim_out)
         self.activation = activation
 
-    def message_func(self, edges):
-        return {'m': self.W_msg(th.cat([edges.src['h'], edges.data['h']], 2))}
+    def message_func(self, edges, norm):
+        combined = th.cat([edges.src['h'], edges.data['h']], dim=-1)
+        message = self.W_msg(combined)
+        norm_weight = edges.data['norm_weight'].unsqueeze(-1).unsqueeze(-1)
+        message = norm_weight * message
+        return {'m': message}
 
     def forward(self, g_dgl, nfeats, efeats):
         with g_dgl.local_scope():
             g = g_dgl
+
             g.ndata['h'] = nfeats
             g.edata['h'] = efeats
-            # Eq4
+
             g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
-            # Eq5
-            g.ndata['h'] = F.relu(self.W_apply(
-                th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
+
+            # g.ndata['h'] = F.relu(self.W_apply(
+            #     th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
+
+            # g.ndata['h_neigh'] = g.ndata['h_neigh'] * \
+            #     g.ndata['norm'].unsqueeze(-1)
+
+            g.ndata['h'] = F.relu(self.W_apply(g.ndata['h_neigh']))
             return g.ndata['h']
 
 

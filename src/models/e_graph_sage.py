@@ -46,8 +46,10 @@ class SAGELayer(nn.Module):
 class SAGE(nn.Module):
     def __init__(self, ndim_in, edim, ndim_out, activation, dropout, num_neighbors):
         super(SAGE, self).__init__()
-        self.conv1 = SAGELayer(ndim_in, edim, 128, activation, num_neighbors)
-        self.conv2 = SAGELayer(128, edim, ndim_out, activation, num_neighbors)
+        self.conv1 = SAGELayer(
+            ndim_in, edim, 128, activation, num_neighbors[0])
+        self.conv2 = SAGELayer(128, edim, ndim_out,
+                               activation, num_neighbors[1])
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, g, nfeats, efeats):

@@ -2,10 +2,13 @@ import pandas as pd
 import networkx as nx
 import os
 import time
+import pickle
+
+from src.graph.graph_measures import calculate_graph_measures
 
 
-def define_sessions(df, src_ip_col, dst_ip_col, src_port_col, dst_port_col, protocol_col=None, timeout=pd.Timedelta(minutes=5)):
-    df = df.sort_values(by='timestamp')
+def define_sessions(df, timestamp_col, src_ip_col, dst_ip_col, src_port_col, dst_port_col, protocol_col=None, timeout=pd.Timedelta(minutes=5)):
+    df = df.sort_values(by=timestamp_col)
     sessions = []
     current_session_id = 0
     last_seen = {}
@@ -18,18 +21,18 @@ def define_sessions(df, src_ip_col, dst_ip_col, src_port_col, dst_port_col, prot
             tuples = (row[src_ip_col], row[dst_ip_col],
                       row[src_port_col], row[dst_port_col])
         if tuples in last_seen:
-            if row['timestamp'] - last_seen[tuples] > timeout:
+            if timeout and row[timestamp_col] - last_seen[tuples] > timeout:
                 current_session_id += 1
         else:
             current_session_id += 1
-        last_seen[tuples] = row['timestamp']
+        last_seen[tuples] = row[timestamp_col]
         sessions.append(current_session_id)
 
     df['session_id'] = sessions
     return df
 
 
-def create_weightless_session_graph(df, src_ip_col, dst_ip_col, multi_graph=False, line_graph=False, folder_path=None):
+def create_weightless_session_graph(df, src_ip_col, dst_ip_col, multi_graph=False, line_graph=False, folder_path=None, edge_attr=None, file_type="gexf"):
     try:
         # Record the start time
         start_time = time.time()
@@ -47,18 +50,32 @@ def create_weightless_session_graph(df, src_ip_col, dst_ip_col, multi_graph=Fals
             G = nx.from_pandas_edgelist(df_session,
                                         source=src_ip_col,
                                         target=dst_ip_col,
+                                        edge_attr=edge_attr,
                                         create_using=base_graph_type())
 
+            if line_graph:
+                G_line_graph = nx.line_graph(G)
+                G_line_graph.add_nodes_from(
+                    (node, G.edges[node]) for node in G_line_graph)
+                G = G_line_graph
+
             if folder_path:
-                # Ensure the folder path exists
-                os.makedirs(folder_path, exist_ok=True)
+                if file_type == "gexf":
+                    filename = os.path.join(
+                        folder_path, 'graphs', f'graph_{session_id}.gexf')
+                    # Save the graph to a file
+                    nx.write_gexf(G, filename)
 
-                # Define the filename
-                filename = os.path.join(
-                    folder_path, f'graph_{session_id}.gexf')
+                if file_type == "pkl":
+                    filename = os.path.join(
+                        folder_path, 'graphs', f'graph_{session_id}.pkl')
 
-                # Save the graph to a file
-                nx.write_gexf(G, filename)
+                    # Save the graph to a file
+                    with open(filename, "wb") as f:
+                        pickle.dump(G, f)
+
+                calculate_graph_measures(
+                    G, os.path.join(folder_path, 'graph_measures', f'graph_{session_id}_measures.json'))
 
             # Append the graph to the list
             graphs.append(G)
@@ -82,6 +99,6 @@ if __name__ == '__main__':
         'protocol': ['TCP', 'TCP', 'TCP', 'TCP', 'TCP']
     })
 
-    df2 = define_sessions(df, "src_ip", "dst_port",
+    df2 = define_sessions(df, "timestamp", "src_ip", "dst_port",
                           'src_port', 'dst_port', 'protocol', pd.Timedelta(minutes=5))
     print(df2)
