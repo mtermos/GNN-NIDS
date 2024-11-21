@@ -14,7 +14,7 @@ class GCNLayer(nn.Module):
         self.W_apply = nn.Linear(ndim_out, ndim_out)
         self.activation = activation
 
-    def message_func(self, edges, norm):
+    def message_func(self, edges):
         combined = th.cat([edges.src['h'], edges.data['h']], dim=-1)
         message = self.W_msg(combined)
         norm_weight = edges.data['norm_weight'].unsqueeze(-1).unsqueeze(-1)
