@@ -1,6 +1,9 @@
 import networkx as nx
 import igraph as ig
 
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
 from src.graph.intra_inter_graphs import separate_graph
 from src.graph.centralities.hierarchical_measures import cal_k_core, cal_k_truss
 from src.graph.centralities.betweenness_centrality import cal_betweenness_centrality
@@ -135,102 +138,148 @@ def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_fea
     return network_features
 
 
-def add_centralities_as_node_features(df, G, graph_path, dataset, cn_measures):
+def normalize_centrality(centrality_dict):
+    # Extract values and reshape for sklearn
+    values = np.array(list(centrality_dict.values())).reshape(-1, 1)
+
+    # Apply z-score normalization
+    scaler = StandardScaler()
+    normalized_values = scaler.fit_transform(values).flatten()
+
+    # Create a dictionary of normalized values
+    normalized_centrality = {node: norm_value for node, norm_value in zip(
+        centrality_dict.keys(), normalized_values)}
+
+    return normalized_centrality
+
+
+def add_centralities_as_node_features(df, G, graph_path, dataset, cn_measures, create_using=nx.DiGraph()):
 
     if not G:
         G = nx.from_pandas_edgelist(
-            df, source=dataset.src_ip_col, target=dataset.dst_ip_col, create_using=nx.MultiDiGraph())
+            df, source=dataset.src_ip_col, target=dataset.dst_ip_col, create_using=create_using)
 
     G.remove_nodes_from(list(nx.isolates(G)))
     for node in G.nodes():
         G.nodes[node]['label'] = node
 
-    G1 = ig.Graph.from_networkx(G)
-    labels = [G.nodes[node]['label'] for node in G.nodes()]
-    G1.vs['label'] = labels
+    compute_communities = False
+    comm_list = ["local_betweenness", "global_betweenness", "local_degree", "global_degree", "local_eigenvector",
+                 "global_eigenvector", "local_closeness", "global_closeness", "local_pagerank", "global_pagerank", "Comm", "mv"]
+    if any(value in comm_list for value in cn_measures):
+        compute_communities = True
 
-    part = G1.community_infomap()
-    communities = []
-    for com in part:
-        communities.append([G1.vs[node_index]['label'] for node_index in com])
+    if compute_communities:
+        G1 = ig.Graph.from_networkx(G)
+        labels = [G.nodes[node]['label'] for node in G.nodes()]
+        G1.vs['label'] = labels
 
-    community_labels = {}
-    for i, community in enumerate(communities):
-        for node in community:
-            community_labels[node] = i
+        part = G1.community_infomap()
+        communities = []
+        for com in part:
+            communities.append([G1.vs[node_index]['label']
+                               for node_index in com])
 
-    nx.set_node_attributes(G, community_labels, "new_community")
+        community_labels = {}
+        for i, community in enumerate(communities):
+            for node in community:
+                community_labels[node] = i
 
-    intra_graph, inter_graph = separate_graph(G, communities)
+        nx.set_node_attributes(G, community_labels, "new_community")
+
+        intra_graph, inter_graph = separate_graph(G, communities)
 
     if "betweenness" in cn_measures:
-        nx.set_node_attributes(G, cal_betweenness_centrality(G), "betweenness")
+        normalized_centrality = normalize_centrality(
+            cal_betweenness_centrality(G))
+        nx.set_node_attributes(G, normalized_centrality, "betweenness")
         print("calculated betweenness")
     if "local_betweenness" in cn_measures:
-        nx.set_node_attributes(G, cal_betweenness_centrality(
-            intra_graph), "local_betweenness")
+        normalized_centrality = normalize_centrality(
+            cal_betweenness_centrality(intra_graph))
+        nx.set_node_attributes(G, normalized_centrality, "local_betweenness")
         print("calculated local_betweenness")
     if "global_betweenness" in cn_measures:
-        nx.set_node_attributes(G, cal_betweenness_centrality(
-            inter_graph), "global_betweenness")
+        normalized_centrality = normalize_centrality(
+            cal_betweenness_centrality(inter_graph))
+        nx.set_node_attributes(G, normalized_centrality, "global_betweenness")
         print("calculated global_betweenness")
     if "degree" in cn_measures:
-        nx.set_node_attributes(G, nx.degree_centrality(G), "degree")
+        normalized_centrality = normalize_centrality(nx.degree_centrality(G))
+        nx.set_node_attributes(G, normalized_centrality, "degree")
         print("calculated degree")
     if "local_degree" in cn_measures:
-        nx.set_node_attributes(
-            G, nx.degree_centrality(intra_graph), "local_degree")
+        normalized_centrality = normalize_centrality(
+            nx.degree_centrality(intra_graph))
+        nx.set_node_attributes(G, normalized_centrality, "local_degree")
         print("calculated local_degree")
     if "global_degree" in cn_measures:
-        nx.set_node_attributes(G, nx.degree_centrality(
-            inter_graph), "global_degree")
+        normalized_centrality = normalize_centrality(
+            nx.degree_centrality(inter_graph))
+        nx.set_node_attributes(G, normalized_centrality, "global_degree")
         print("calculated global_degree")
     if "eigenvector" in cn_measures:
-        nx.set_node_attributes(G, nx.eigenvector_centrality(
-            G, max_iter=600), "eigenvector")
+        normalized_centrality = normalize_centrality(
+            nx.eigenvector_centrality(G, max_iter=600))
+        nx.set_node_attributes(G, normalized_centrality, "eigenvector")
         print("calculated eigenvector")
     if "local_eigenvector" in cn_measures:
-        nx.set_node_attributes(G, nx.eigenvector_centrality(
-            intra_graph), "local_eigenvector")
+        normalized_centrality = normalize_centrality(
+            nx.eigenvector_centrality(intra_graph))
+        nx.set_node_attributes(G, normalized_centrality, "local_eigenvector")
         print("calculated local_eigenvector")
     if "global_eigenvector" in cn_measures:
-        nx.set_node_attributes(G, nx.eigenvector_centrality(
-            inter_graph), "global_eigenvector")
+        normalized_centrality = normalize_centrality(
+            nx.eigenvector_centrality(inter_graph))
+        nx.set_node_attributes(G, normalized_centrality, "global_eigenvector")
         print("calculated global_eigenvector")
     if "closeness" in cn_measures:
-        nx.set_node_attributes(G, nx.closeness_centrality(G), "closeness")
+        normalized_centrality = normalize_centrality(
+            nx.closeness_centrality(G))
+        nx.set_node_attributes(G, normalized_centrality, "closeness")
         print("calculated closeness")
     if "local_closeness" in cn_measures:
-        nx.set_node_attributes(G, nx.closeness_centrality(
-            intra_graph), "local_closeness")
+        normalized_centrality = normalize_centrality(nx.closeness_centrality(
+            intra_graph))
+        nx.set_node_attributes(G, normalized_centrality, "local_closeness")
         print("calculated local_closeness")
     if "global_closeness" in cn_measures:
-        nx.set_node_attributes(G, nx.closeness_centrality(
-            inter_graph), "global_closeness")
+        normalized_centrality = normalize_centrality(nx.closeness_centrality(
+            inter_graph))
+        nx.set_node_attributes(G, normalized_centrality, "global_closeness")
         print("calculated global_closeness")
     if "pagerank" in cn_measures:
-        nx.set_node_attributes(G, nx.pagerank(G, alpha=0.85), "pagerank")
+        normalized_centrality = normalize_centrality(
+            nx.pagerank(G, alpha=0.85))
+        nx.set_node_attributes(G, normalized_centrality, "pagerank")
         print("calculated pagerank")
     if "local_pagerank" in cn_measures:
-        nx.set_node_attributes(G, nx.pagerank(
-            intra_graph, alpha=0.85), "local_pagerank")
+        normalized_centrality = normalize_centrality(nx.pagerank(
+            intra_graph, alpha=0.85))
+        nx.set_node_attributes(G, normalized_centrality, "local_pagerank")
         print("calculated local_pagerank")
     if "global_pagerank" in cn_measures:
-        nx.set_node_attributes(G, nx.pagerank(
-            inter_graph, alpha=0.85), "global_pagerank")
+        normalized_centrality = normalize_centrality(nx.pagerank(
+            inter_graph, alpha=0.85))
+        nx.set_node_attributes(G, normalized_centrality, "global_pagerank")
         print("calculated global_pagerank")
     if "k_core" in cn_measures:
-        nx.set_node_attributes(G, cal_k_core(G), "k_core")
+        normalized_centrality = normalize_centrality(cal_k_core(G))
+        nx.set_node_attributes(G, normalized_centrality, "k_core")
         print("calculated k_core")
     if "k_truss" in cn_measures:
-        nx.set_node_attributes(G, cal_k_truss(G), "k_truss")
+        normalized_centrality = normalize_centrality(cal_k_truss(G))
+        nx.set_node_attributes(G, normalized_centrality, "k_truss")
         print("calculated k_truss")
     if "Comm" in cn_measures:
-        nx.set_node_attributes(
-            G, comm_centrality(G, community_labels), "Comm")
+        normalized_centrality = normalize_centrality(
+            comm_centrality(G, community_labels))
+        nx.set_node_attributes(G, normalized_centrality, "Comm")
         print("calculated Comm")
     if "mv" in cn_measures:
-        nx.set_node_attributes(G, modularity_vitality(G1, part), "mv")
+        normalized_centrality = normalize_centrality(
+            modularity_vitality(G1, part))
+        nx.set_node_attributes(G, normalized_centrality, "mv")
         print("calculated mv")
 
     if graph_path:
