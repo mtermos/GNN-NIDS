@@ -6,7 +6,7 @@ import dgl
 
 
 class SAGELayer(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, num_neighbors):
+    def __init__(self, ndim_in, edim, ndim_out, activation, num_neighbors=None):
         super(SAGELayer, self).__init__()
         # force to outut fix dimensions
         self.W_msg = nn.Linear(ndim_in + edim, ndim_out)
@@ -23,33 +23,50 @@ class SAGELayer(nn.Module):
             g = g_dgl
 
             # Neighbor sampling
-            sampled_g = dgl.sampling.sample_neighbors(
-                g, g.nodes(), self.num_neighbors)
+            if self.num_neighbors:
+                sampled_g = dgl.sampling.sample_neighbors(
+                    g, g.nodes(), self.num_neighbors)
 
-            # Set node and edge features for the sampled graph
-            sampled_g.ndata['h'] = nfeats
-            # print(nfeats.shape)
+                # Set node and edge features for the sampled graph
+                sampled_g.ndata['h'] = nfeats
+                # print(nfeats.shape)
 
-            sampled_eids = sampled_g.edata[dgl.EID]
+                sampled_eids = sampled_g.edata[dgl.EID]
 
-            # Create new edge features for the sampled graph
-            sampled_eids = sampled_g.edata[dgl.EID]
-            sampled_g.edata['h'] = efeats[sampled_eids]
+                # Create new edge features for the sampled graph
+                sampled_eids = sampled_g.edata[dgl.EID]
+                sampled_g.edata['h'] = efeats[sampled_eids]
 
-            sampled_g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+                sampled_g.update_all(
+                    self.message_func, fn.mean('m', 'h_neigh'))
 
-            h_new = F.relu(self.W_apply(
-                th.cat([nfeats, sampled_g.ndata['h_neigh']], 2)))
+                h_new = F.relu(self.W_apply(
+                    th.cat([nfeats, sampled_g.ndata['h_neigh']], 2)))
+            else:
+
+                g.ndata['h'] = nfeats
+                g.edata['h'] = efeats
+
+                g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+
+                h_new = F.relu(self.W_apply(
+                    th.cat([nfeats, g.ndata['h_neigh']], 2)))
             return h_new
 
 
 class SAGE(nn.Module):
     def __init__(self, ndim_in, edim, ndim_out, activation, dropout, num_neighbors):
         super(SAGE, self).__init__()
-        self.conv1 = SAGELayer(
-            ndim_in, edim, 128, activation, num_neighbors[0])
-        self.conv2 = SAGELayer(128, edim, ndim_out,
-                               activation, num_neighbors[1])
+        if num_neighbors:
+            self.conv1 = SAGELayer(
+                ndim_in, edim, 128, activation, num_neighbors[0])
+            self.conv2 = SAGELayer(128, edim, ndim_out,
+                                   activation, num_neighbors[1])
+        else:
+            self.conv1 = SAGELayer(ndim_in, edim, 128, activation)
+            self.conv2 = SAGELayer(128, edim, ndim_out,
+                                   activation)
+
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, g, nfeats, efeats):
@@ -90,11 +107,11 @@ class MLPPredictor(nn.Module):
 
 
 class EGRAPHSAGE(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, num_neighbors, residual):
+    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, num_neighbors=None, residual=False, num_class=2):
         super().__init__()
         self.gnn = SAGE(ndim_in, edim, ndim_out,
                         activation, dropout, num_neighbors)
-        self.pred = MLPPredictor(ndim_out, edim, 2, residual)
+        self.pred = MLPPredictor(ndim_out, edim, num_class, residual)
 
     def forward(self, g, nfeats, efeats):
         h = self.gnn(g, nfeats, efeats)
