@@ -155,11 +155,11 @@ class MLPPredictor(nn.Module):
 
 
 class EGAT(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, residual):
+    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, residual=False, num_class=2):
         super().__init__()
         self.gnn = GAT(ndim_in, edim, ndim_out, activation, dropout)
 
-        self.pred = MLPPredictor(ndim_out, edim, 2, residual)
+        self.pred = MLPPredictor(ndim_out, edim, num_class, residual)
         # print("DONE")
 
     def forward(self, g, nfeats, efeats):

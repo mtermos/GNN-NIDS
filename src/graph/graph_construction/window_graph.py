@@ -30,7 +30,7 @@ def create_weightless_window_graph(df, src_ip_col, dst_ip_col, window_size=20000
         print(f"==>> number_of_groups: {number_of_groups}")
 
         if test_percentage:
-            folder_path += "_train_test"
+            # folder_path += "_train_test"
 
             number_of_test_groups = math.ceil(
                 number_of_groups * test_percentage / 100)
