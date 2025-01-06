@@ -11,7 +11,8 @@ class Model:
         aggregation=None,
         num_neighbors=None,
         norm=False,
-        trained_model=None
+        trained_model=None,
+        best_model=None
     ):
         self.model_name = model_name
         self.model_class = model_class
@@ -24,3 +25,4 @@ class Model:
         self.num_neighbors = num_neighbors
         self.norm = norm
         self.trained_model = trained_model
+        self.best_model = best_model
