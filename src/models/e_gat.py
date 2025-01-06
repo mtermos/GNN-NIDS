@@ -1,7 +1,6 @@
 import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
-import dgl.function as fn
 
 
 class GATLayer(nn.Module):
@@ -18,6 +17,7 @@ class GATLayer(nn.Module):
         # equation (2)
 
         self.attn_fc = nn.Linear(2*ndim_in, 1)
+        self.activation = activation
         self.reset_parameters()
         # print("OK1")
 
@@ -91,7 +91,7 @@ class GATLayer(nn.Module):
     #        print(g.ndata["z"].shape)
      #       print(g.ndata["h"].shape)
 
-            g.ndata['h'] = F.relu(self.W_apply(
+            g.ndata['h'] = self.activation(self.W_apply(
                 th.cat([g.ndata['h'], g.ndata['z']], 2)))
 #            print(g.ndata['h'].shape)
 
@@ -103,25 +103,34 @@ class GATLayer(nn.Module):
 
 
 class GAT(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, dropout):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers, activation, dropout):
         super().__init__()
        # self.layers = nn.ModuleList([
         self.layers = nn.ModuleList()
-        self.layers.append(GATLayer(ndim_in, edim, 55, activation))
+        for layer in range(num_layers):
+            if layer == 0:
+                self.layers.append(
+                    GATLayer(ndim_in, edim, ndim_out[layer], activation))
+            else:
+                self.layers.append(
+                    GATLayer(ndim_out[layer-1], edim, ndim_out[layer], activation))
 
-        self.layers.append(GATLayer(55, edim, ndim_out, activation))
         self.dropout = nn.Dropout(p=dropout)
 
        # print("DONE")
 
     def forward(self, g, nfeats, efeats):
-        for i, layer in enumerate(self.layers):
-            nfeats = layer(g, nfeats, efeats)
+        # for i, layer in enumerate(self.layers):
+        #     nfeats = layer(g, nfeats, efeats)
 
         # print('hello')
-#         print(f"nfeats.shape: {nfeats.shape}")
-#         print(f"nfeats.sum(1).shape: {nfeats.sum(1).shape}")
-#         print("===================")
+        #         print(f"nfeats.shape: {nfeats.shape}")
+        #         print(f"nfeats.sum(1).shape: {nfeats.sum(1).shape}")
+        #         print("===================")
+        for i, layer in enumerate(self.layers):
+            if i != 0:
+                nfeats = self.dropout(nfeats)
+            nfeats = layer(g, nfeats, efeats)
         return nfeats.sum(1)
 
 
@@ -155,11 +164,12 @@ class MLPPredictor(nn.Module):
 
 
 class EGAT(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, residual=False, num_class=2):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=False, num_class=2):
         super().__init__()
-        self.gnn = GAT(ndim_in, edim, ndim_out, activation, dropout)
+        self.gnn = GAT(ndim_in, edim, ndim_out, num_layers,
+                       activation, dropout)
 
-        self.pred = MLPPredictor(ndim_out, edim, num_class, residual)
+        self.pred = MLPPredictor(ndim_out[-1], edim, num_class, residual)
         # print("DONE")
 
     def forward(self, g, nfeats, efeats):

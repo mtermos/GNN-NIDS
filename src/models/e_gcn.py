@@ -36,16 +36,22 @@ class GCNLayer(nn.Module):
             # g.ndata['h_neigh'] = g.ndata['h_neigh'] * \
             #     g.ndata['norm'].unsqueeze(-1)
 
-            g.ndata['h'] = F.relu(self.W_apply(g.ndata['h_neigh']))
+            g.ndata['h'] = self.activation(self.W_apply(g.ndata['h_neigh']))
             return g.ndata['h']
 
 
 class GCN(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, dropout):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers, activation, dropout):
         super(GCN, self).__init__()
         self.layers = nn.ModuleList()
-        self.layers.append(GCNLayer(ndim_in, edim, 128, activation))
-        self.layers.append(GCNLayer(128, edim, ndim_out, activation))
+        for layer in range(num_layers):
+            if layer == 0:
+                self.layers.append(
+                    GCNLayer(ndim_in, edim, ndim_out[layer], activation))
+            else:
+                self.layers.append(
+                    GCNLayer(ndim_out[layer-1], edim, ndim_out[layer], activation))
+
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, g, nfeats, efeats):
@@ -86,10 +92,11 @@ class MLPPredictor(nn.Module):
 
 
 class EGCN(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, dropout, residual=False, num_class=2):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=False, num_class=2):
         super().__init__()
-        self.gnn = GCN(ndim_in, edim, ndim_out, activation, dropout)
-        self.pred = MLPPredictor(ndim_out, edim, num_class, residual)
+        self.gnn = GCN(ndim_in, edim, ndim_out,
+                       num_layers, activation, dropout)
+        self.pred = MLPPredictor(ndim_out[-1], edim, num_class, residual)
 
     def forward(self, g, nfeats, efeats):
         h = self.gnn(g, nfeats, efeats)
