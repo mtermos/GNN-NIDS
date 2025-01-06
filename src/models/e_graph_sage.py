@@ -8,6 +8,7 @@ import dgl
 class SAGELayer(nn.Module):
     def __init__(self, ndim_in, edim, ndim_out, activation, aggregation, num_neighbors=None):
         super(SAGELayer, self).__init__()
+        # self.W_msg = nn.Linear(edim, ndim_out)
         self.W_msg = nn.Linear(ndim_in + edim, ndim_out)
         self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
         self.activation = activation
@@ -15,9 +16,10 @@ class SAGELayer(nn.Module):
         self.num_neighbors = num_neighbors
 
     def message_func(self, edges):
+        # print(edges.data['h'].shape)
         return {'m': self.W_msg(th.cat([edges.src['h'], edges.data['h']], 2))}
         # to be experimented
-        # return {'m': self.W_msg(edges.src['h'])}
+        # return {'m': self.W_msg(edges.data['h'])}
 
     def forward(self, g_dgl, nfeats, efeats):
         with g_dgl.local_scope():
@@ -36,40 +38,47 @@ class SAGELayer(nn.Module):
                 sampled_g.update_all(
                     self.message_func, fn.mean('m', 'h_neigh'))
 
-                h_new = F.relu(self.W_apply(
+                h_new = self.activation(self.W_apply(
                     th.cat([nfeats, sampled_g.ndata['h_neigh']], 2)))
             else:
 
                 g.ndata['h'] = nfeats
                 g.edata['h'] = efeats
 
-                g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+                if self.aggregation == "mean":
+                    g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+                elif self.aggregation == "pool":
+                    g.update_all(self.message_func, fn.sum('m', 'h_neigh'))
 
-                h_new = F.relu(self.W_apply(
+                # to be continued
+                elif self.aggregation == "lstm":
+                    g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+
+                h_new = self.activation(self.W_apply(
                     th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
             return h_new
 
 
 class SAGE(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, aggregation, dropout, num_neighbors):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers, activation, aggregation, dropout, num_neighbors):
         super(SAGE, self).__init__()
-        if num_neighbors:
-            self.conv1 = SAGELayer(
-                ndim_in, edim, 128, activation, aggregation, num_neighbors[0])
-            self.conv2 = SAGELayer(128, edim, ndim_out,
-                                   activation, aggregation, num_neighbors[1])
-        else:
-            self.conv1 = SAGELayer(ndim_in, edim, 128, activation, aggregation)
-            self.conv2 = SAGELayer(128, edim, ndim_out,
-                                   activation, aggregation)
+        self.layers = nn.ModuleList()
+        for layer in range(num_layers):
+            if layer == 0:
+                self.layers.append(
+                    SAGELayer(ndim_in, edim, ndim_out[layer], activation, aggregation, num_neighbors[layer] if num_neighbors else None))
+            else:
+                self.layers.append(SAGELayer(
+                    ndim_out[layer-1], edim, ndim_out[layer], activation, aggregation, num_neighbors[layer] if num_neighbors else None))
 
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, g, nfeats, efeats):
-        nfeats = self.conv1(g, nfeats, efeats)
-        nfeats = self.dropout(nfeats)
-        nfeats = self.conv2(g, nfeats, efeats)
 
+        for i, layer in enumerate(self.layers):
+            if i != 0:
+                nfeats = self.dropout(nfeats)
+            nfeats = layer(g, nfeats, efeats)
         return nfeats.sum(1)
 
 
@@ -103,12 +112,12 @@ class MLPPredictor(nn.Module):
 
 
 class EGRAPHSAGE(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation, aggregation, dropout, num_neighbors=None, residual=False, num_class=2):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, aggregation="mean", dropout=0.2, num_neighbors=None, residual=False, num_class=2):
         super().__init__()
-        self.gnn = SAGE(ndim_in, edim, ndim_out,
+        self.gnn = SAGE(ndim_in, edim, ndim_out, num_layers,
                         activation, aggregation, dropout, num_neighbors)
         self.pred = MLPPredictor(
-            ndim_out, edim, num_class, activation, residual)
+            ndim_out[-1], edim, num_class, activation, residual)
 
     def forward(self, g, nfeats, efeats):
         h = self.gnn(g, nfeats, efeats)

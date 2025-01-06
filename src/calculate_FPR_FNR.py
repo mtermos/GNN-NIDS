@@ -6,18 +6,18 @@ def calculate_FPR_FNR(cm):
     FP = cm[0][1]
 
     # Sensitivity, hit rate, recall, or true positive rate
-    TPR = TP/(TP+FN)
+    TPR = TP / (TP + FN) if (TP + FN) != 0 else 0
     # Specificity or true negative rate
-    TNR = TN/(TN+FP)
+    TNR = TN / (TN + FP) if (TN + FP) != 0 else 0
     # Precision or positive predictive value
-    PPV = TP/(TP+FP)
+    PPV = TP / (TP + FP) if (TP + FP) != 0 else 0
     # Negative predictive value
-    NPV = TN/(TN+FN)
+    NPV = TN / (TN + FN) if (TN + FN) != 0 else 0
     # Fall out or false positive rate
-    FPR = FP/(FP+TN)
+    FPR = FP / (FP + TN) if (FP + TN) != 0 else 0
     # False negative rate
-    FNR = FN/(TP+FN)
+    FNR = FN / (TP + FN) if (TP + FN) != 0 else 0
     # False discovery rate
-    FDR = FP/(TP+FP)
+    FDR = FP / (TP + FP) if (TP + FP) != 0 else 0
 
     return FPR, FNR
