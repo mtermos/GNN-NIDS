@@ -11,7 +11,8 @@ class GCNLayer(nn.Module):
         # force to outut fix dimensions
         self.W_msg = nn.Linear(ndim_in + edim, ndim_out)
         # apply weight
-        self.W_apply = nn.Linear(ndim_out, ndim_out)
+        # self.W_apply = nn.Linear(ndim_out, ndim_out)
+        self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
         self.activation = activation
 
     def message_func(self, edges):
@@ -36,7 +37,9 @@ class GCNLayer(nn.Module):
             # g.ndata['h_neigh'] = g.ndata['h_neigh'] * \
             #     g.ndata['norm'].unsqueeze(-1)
 
-            g.ndata['h'] = self.activation(self.W_apply(g.ndata['h_neigh']))
+            # g.ndata['h'] = self.activation(self.W_apply(g.ndata['h_neigh']))
+            g.ndata['h'] = self.activation(self.W_apply(
+                th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
             return g.ndata['h']
 
 
