@@ -7,4 +7,4 @@ from src.models.gcn import GCN
 from src.models.graph_sage import GRAPHSAGE
 from src.models.gat import GAT
 
-from src.models.model import Model
+from src.models.model import Model, LineGraphModel

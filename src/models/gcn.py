@@ -1,8 +1,6 @@
-import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
 import dgl
-import dgl.function as fn
 from dgl.nn.pytorch import GraphConv
 
 
@@ -11,24 +9,13 @@ class MLPPredictor(nn.Module):
     def __init__(self, in_feats, hidden_feats, output, dropout=0.):
         super(MLPPredictor, self).__init__()
 
-        if output == 1:
-            self.predict = nn.Sequential(
-                nn.Dropout(dropout),
-                nn.Linear(in_feats, hidden_feats),
-                nn.ReLU(),
-                nn.BatchNorm1d(hidden_feats),
-                nn.Linear(hidden_feats, output),
-                nn.Sigmoid()
-            )
-        else:
-            self.predict = nn.Sequential(
-                nn.Dropout(dropout),
-                nn.Linear(in_feats, hidden_feats),
-                nn.ReLU(),
-                nn.BatchNorm1d(hidden_feats),
-                nn.Linear(hidden_feats, output),
-                nn.Softmax()
-            )
+        self.predict = nn.Sequential(
+            nn.Dropout(dropout),
+            nn.Linear(in_feats, hidden_feats),
+            nn.ReLU(),
+            nn.BatchNorm1d(hidden_feats),
+            nn.Linear(hidden_feats, output)
+        )
 
     def forward(self, feats):
         return self.predict(feats)
@@ -48,12 +35,8 @@ class GCN(nn.Module):
         self.conv1 = GraphConv(gcn_in_size, gcn_hid_size, activation=F.relu)
         self.conv2 = GraphConv(gcn_hid_size, gcn_out_size, activation=F.relu)
 
-        if n_classes == 2:
-            self.predictor = MLPPredictor(
-                gcn_out_size, mlp_hid_size, 1, dropout=mlp_dropout)
-        else:
-            self.predictor = MLPPredictor(
-                gcn_out_size, mlp_hid_size, n_classes, dropout=mlp_dropout)
+        self.predictor = MLPPredictor(
+            gcn_out_size, mlp_hid_size, n_classes, dropout=mlp_dropout)
 
         self.dropout = nn.Dropout(gcn_dropout)
 

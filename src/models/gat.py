@@ -1,8 +1,6 @@
-import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
 import dgl
-import dgl.function as fn
 from dgl.nn.pytorch import GATConv
 
 
@@ -11,24 +9,13 @@ class MLPPredictor(nn.Module):
     def __init__(self, in_feats, hidden_feats, output, dropout=0.):
         super(MLPPredictor, self).__init__()
 
-        if output == 1:
-            self.predict = nn.Sequential(
-                nn.Dropout(dropout),
-                nn.Linear(in_feats, hidden_feats),
-                nn.ReLU(),
-                nn.BatchNorm1d(hidden_feats),
-                nn.Linear(hidden_feats, output),
-                nn.Sigmoid()
-            )
-        else:
-            self.predict = nn.Sequential(
-                nn.Dropout(dropout),
-                nn.Linear(in_feats, hidden_feats),
-                nn.ReLU(),
-                nn.BatchNorm1d(hidden_feats),
-                nn.Linear(hidden_feats, output),
-                nn.Softmax()
-            )
+        self.predict = nn.Sequential(
+            nn.Dropout(dropout),
+            nn.Linear(in_feats, hidden_feats),
+            nn.ReLU(),
+            nn.BatchNorm1d(hidden_feats),
+            nn.Linear(hidden_feats, output),
+        )
 
     def forward(self, feats):
         return self.predict(feats)
@@ -51,20 +38,33 @@ class GAT(nn.Module):
         self.conv2 = GATConv(gcn_hid_size, gcn_out_size,
                              num_heads=num_heads, activation=F.relu)
 
-        if n_classes == 2:
-            self.predictor = MLPPredictor(
-                gcn_out_size, mlp_hid_size, 1, dropout=mlp_dropout)
-        else:
-            self.predictor = MLPPredictor(
-                gcn_out_size, mlp_hid_size, n_classes, dropout=mlp_dropout)
+        self.predictor = MLPPredictor(
+            gcn_out_size, mlp_hid_size, n_classes, dropout=mlp_dropout)
 
         self.dropout = nn.Dropout(gcn_dropout)
 
     def forward(self, g, features):
         g = dgl.add_self_loop(g)
-        h = self.conv1(g, features)
+
+        # First GATConv layer
+        h = self.conv1(g, features)  # [N, num_heads, gcn_hid_size]
+        h = h.mean(1)  # Combine heads: [N, num_heads * gcn_hid_size]
         h = self.dropout(h)
-        h = self.conv2(g, h)
+
+        # Second GATConv layer
+        h = self.conv2(g, h)  # [N, num_heads, gcn_out_size]
+        h = h.mean(1)  # Aggregate heads: [N, gcn_out_size]
         h = self.dropout(h)
-        pred = self.predictor(h)
+
+        pred = self.predictor(h)  # Predict: [N, n_classes]
         return pred
+
+    # def forward(self, g, features):
+    #     g = dgl.add_self_loop(g)
+    #     h = self.conv1(g, features)
+    #     h = self.dropout(h)
+    #     h = self.conv2(g, h)
+    #     h = self.dropout(h)
+    #     print(h.shape)
+    #     pred = self.predictor(h)
+    #     return pred
