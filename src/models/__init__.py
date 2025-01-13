@@ -10,3 +10,7 @@ from src.models.graph_sage import GRAPHSAGE
 from src.models.gat import GAT
 
 from src.models.model import Model, LineGraphModel
+
+from src.models.cnn import NIDSCNN
+from src.models.lstm import NIDSLSTM
+from src.models.gru import NIDSGRU
