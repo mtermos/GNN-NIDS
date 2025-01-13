@@ -3,6 +3,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import dgl
 
 
 class GATLayer(nn.Module):
@@ -306,16 +307,15 @@ class EGAT(nn.Module):
                  activation=F.relu,
                  dropout=0.2,
                  residual=False,
-                 num_class=2):
+                 num_classes=2):
         super().__init__()
 
-        # print("o1 refactored e_gat")
         # GAT backbone
         self.gnn = GAT(in_dim, e_dim, out_dims,
                        num_layers, activation, dropout)
 
         # Edge predictor
-        self.pred = MLPPredictor(out_dims[-1], e_dim, num_class, residual)
+        self.pred = MLPPredictor(out_dims[-1], e_dim, num_classes, residual)
 
     def forward(self, g, nfeats, efeats):
         """

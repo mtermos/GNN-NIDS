@@ -22,36 +22,58 @@ class MLPPredictor(nn.Module):
 
 
 class GRAPHSAGE(nn.Module):
-    def __init__(self,
-                 gcn_in_size,
-                 gcn_hid_size=128,
-                 gcn_out_size=128,
-                 gcn_dropout=0.2,
-                 aggregator_type="gcn",
-                 mlp_hid_size=200,
-                 n_classes=2,
-                 mlp_dropout=0.2):
-
+    def __init__(
+        self,
+        in_dim,              # input feature dimension
+        # list of output dimensions for each layer, e.g. [128, 256, 256]
+        ndim_out,
+        aggregator_type="gcn",
+        sage_dropout=0.2,
+        mlp_hid_size=200,
+        n_classes=2,
+        mlp_dropout=0.2
+    ):
         super().__init__()
-        self.conv1 = SAGEConv(gcn_in_size, gcn_hid_size,
-                              aggregator_type, activation=F.relu)
-        self.conv2 = SAGEConv(gcn_hid_size, gcn_out_size,
-                              aggregator_type, activation=F.relu)
 
-        # if n_classes == 2:
-        #     self.predictor = MLPPredictor(
-        #         gcn_out_size, mlp_hid_size, 1, dropout=mlp_dropout)
-        # else:
+        # A ModuleList to store SAGEConv layers
+        self.layers = nn.ModuleList()
+
+        # The dimension of the features entering the first layer is in_dim
+        current_in_dim = in_dim
+
+        # Create each layer based on ndim_out
+        for out_dim in ndim_out:
+            self.layers.append(
+                SAGEConv(
+                    in_feats=current_in_dim,
+                    out_feats=out_dim,
+                    aggregator_type=aggregator_type,
+                    activation=F.relu
+                )
+            )
+            # The output of this layer becomes the input to the next
+            current_in_dim = out_dim
+
+        # The final layer's dimension is the last entry in ndim_out
+        final_out_dim = ndim_out[-1]
+
+        # Create MLP Predictor with final_out_dim as input
         self.predictor = MLPPredictor(
-            gcn_out_size, mlp_hid_size, n_classes, dropout=mlp_dropout)
+            final_out_dim, mlp_hid_size, n_classes, dropout=mlp_dropout
+        )
 
-        self.dropout = nn.Dropout(gcn_dropout)
+        self.dropout = nn.Dropout(sage_dropout)
 
     def forward(self, g, features):
+        # Optionally add self-loops if needed
         g = dgl.add_self_loop(g)
-        h = self.conv1(g, features)
-        h = self.dropout(h)
-        h = self.conv2(g, h)
-        h = self.dropout(h)
+
+        h = features
+        # Pass through each SAGEConv layer
+        for layer in self.layers:
+            h = layer(g, h)
+            h = self.dropout(h)
+
+        # Predict
         pred = self.predictor(h)
         return pred

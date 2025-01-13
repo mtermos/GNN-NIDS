@@ -1,11 +1,10 @@
 import torch.nn as nn
 import torch.nn.functional as F
 import dgl
-from dgl.nn.pytorch import GATConv
+from dgl.nn import GATConv
 
 
 class MLPPredictor(nn.Module):
-
     def __init__(self, in_feats, hidden_feats, output, dropout=0.):
         super(MLPPredictor, self).__init__()
 
@@ -22,49 +21,68 @@ class MLPPredictor(nn.Module):
 
 
 class GAT(nn.Module):
-    def __init__(self,
-                 gcn_in_size,
-                 gcn_hid_size=128,
-                 gcn_out_size=128,
-                 gcn_dropout=0.2,
-                 num_heads=4,
-                 mlp_hid_size=200,
-                 n_classes=2,
-                 mlp_dropout=0.2):
+    """
+    GAT with a dynamic number of layers. 
+    'ndim_out' is a list of output dimensions for each GAT layer 
+    (e.g., [128, 256, 256] for three layers).
+    """
 
+    def __init__(
+        self,
+        in_dim,           # dimension of your input node features
+        ndim_out,         # list of output dims, e.g. [128, 256, 256]
+        num_heads=4,
+        dropout=0.2,
+        mlp_hid_size=200,
+        n_classes=2,
+        mlp_dropout=0.2
+    ):
         super().__init__()
-        self.conv1 = GATConv(gcn_in_size, gcn_hid_size,
-                             num_heads=num_heads, activation=F.relu)
-        self.conv2 = GATConv(gcn_hid_size, gcn_out_size,
-                             num_heads=num_heads, activation=F.relu)
 
+        # We'll store the GATConv layers in a ModuleList
+        self.layers = nn.ModuleList()
+
+        # Track the "current" dimensionality of features going into the next layer
+        current_in_dim = in_dim
+
+        for out_dim in ndim_out:
+            self.layers.append(
+                GATConv(
+                    in_feats=current_in_dim,
+                    out_feats=out_dim,
+                    num_heads=num_heads,
+                    activation=F.relu
+                )
+            )
+            # After averaging over heads, the new feature dim = out_dim
+            current_in_dim = out_dim
+
+        # The last dimension in ndim_out is what feeds into the MLP
+        final_out_dim = ndim_out[-1]
+
+        # Create an MLP predictor
         self.predictor = MLPPredictor(
-            gcn_out_size, mlp_hid_size, n_classes, dropout=mlp_dropout)
+            in_feats=final_out_dim,
+            hidden_feats=mlp_hid_size,
+            output=n_classes,
+            dropout=mlp_dropout
+        )
 
-        self.dropout = nn.Dropout(gcn_dropout)
+        self.dropout = nn.Dropout(dropout)
+        self.num_heads = num_heads
 
     def forward(self, g, features):
+        # Optionally add self-loop if needed (depends on whether your graph already has them)
         g = dgl.add_self_loop(g)
 
-        # First GATConv layer
-        h = self.conv1(g, features)  # [N, num_heads, gcn_hid_size]
-        h = h.mean(1)  # Combine heads: [N, num_heads * gcn_hid_size]
-        h = self.dropout(h)
+        h = features
+        for gat_layer in self.layers:
+            # Each GAT layer outputs shape (N, num_heads, out_dim)
+            h = gat_layer(g, h)
+            # Aggregate over the heads by mean or any other aggregator you prefer
+            h = h.mean(dim=1)   # shape (N, out_dim)
+            h = self.dropout(h)
 
-        # Second GATConv layer
-        h = self.conv2(g, h)  # [N, num_heads, gcn_out_size]
-        h = h.mean(1)  # Aggregate heads: [N, gcn_out_size]
-        h = self.dropout(h)
-
-        pred = self.predictor(h)  # Predict: [N, n_classes]
+        # Final MLP prediction
+        pred = self.predictor(h)  # shape (N, n_classes)
         return pred
-
-    # def forward(self, g, features):
-    #     g = dgl.add_self_loop(g)
-    #     h = self.conv1(g, features)
-    #     h = self.dropout(h)
-    #     h = self.conv2(g, h)
-    #     h = self.dropout(h)
-    #     print(h.shape)
-    #     pred = self.predictor(h)
-    #     return pred
