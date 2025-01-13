@@ -105,10 +105,10 @@ def find_communities(G, verbose):
         print(
             f"==>> number_of_communities: {len(communities)}, in {str(timeit.default_timer() - start_time)} seconds")
 
-    return communities
+    return G1, part, communities
 
 
-def calculate_graph_measures(G, file_path=None, verbose=False):
+def calculate_graph_measures(G, file_path=None, verbose=False, communities=None):
 
     properties = {}
 
@@ -125,11 +125,11 @@ def calculate_graph_measures(G, file_path=None, verbose=False):
 
     properties["density"] = density(G, verbose)
 
-    # communities = find_communities(G, verbose)
-
-    # properties["number_of_communities"] = len(communities)
-    # properties["mixing_parameter"] = mixing_parameter(G, communities, verbose)
-    # properties["modularity"] = modularity(G, communities, verbose)
+    if communities:
+        properties["number_of_communities"] = len(communities)
+        properties["mixing_parameter"] = mixing_parameter(
+            G, communities, verbose)
+        properties["modularity"] = modularity(G, communities, verbose)
 
     if file_path:
         outfile = open(file_path, 'w')

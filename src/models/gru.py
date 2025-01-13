@@ -12,10 +12,12 @@ class NIDSGRU(nn.Module):
         num_classes,    # Output classes for classification
         use_bn=False,   # Whether to use Batch Normalization
         # Dropout probability (applied in GRU if num_layers > 1)
-        dropout=0.5
+        dropout=0.5,
+        model_name="gru"
     ):
         super(NIDSGRU, self).__init__()
 
+        self.model_name = model_name
         self.num_features = num_features
         self.hidden_size = hidden_size
         self.num_layers = num_layers

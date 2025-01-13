@@ -11,31 +11,34 @@ from src.graph.centralities.comm_centrality import comm_centrality
 from src.graph.centralities.modularity_vitality import modularity_vitality
 
 
-def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_features, create_using=nx.DiGraph()):
+def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_features, G=None, create_using=nx.DiGraph(), communities=None, G1=None, part=None):
 
-    G = nx.from_pandas_edgelist(
-        df, source=dataset.src_ip_col, target=dataset.dst_ip_col, create_using=create_using)
-    G.remove_nodes_from(list(nx.isolates(G)))
-    for node in G.nodes():
-        G.nodes[node]['label'] = node
+    if not G:
+        G = nx.from_pandas_edgelist(
+            df, source=dataset.src_ip_col, target=dataset.dst_ip_col, create_using=create_using)
+        G.remove_nodes_from(list(nx.isolates(G)))
+        for node in G.nodes():
+            G.nodes[node]['label'] = node
 
-    compute_communities = False
+    need_communities = False
     comm_list = ["local_betweenness", "global_betweenness", "local_degree", "global_degree", "local_eigenvector",
                  "global_eigenvector", "local_closeness", "global_closeness", "local_pagerank", "global_pagerank", "Comm", "mv"]
     if any(value in comm_list for value in cn_measures):
-        compute_communities = True
+        need_communities = True
 
-    if compute_communities:
-        G1 = ig.Graph.from_networkx(G)
-        labels = [G.nodes[node]['label'] for node in G.nodes()]
-        G1.vs['label'] = labels
+    if need_communities and not communities:
+        if not G1:
+            G1 = ig.Graph.from_networkx(G)
+            labels = [G.nodes[node]['label'] for node in G.nodes()]
+            G1.vs['label'] = labels
+        if not part:
+            part = G1.community_infomap()
 
-        part = G1.community_infomap()
         communities = []
         for com in part:
             communities.append([G1.vs[node_index]['label']
                                for node_index in com])
-
+    if communities:
         community_labels = {}
         for i, community in enumerate(communities):
             for node in community:
@@ -44,6 +47,10 @@ def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_fea
         nx.set_node_attributes(G, community_labels, "new_community")
 
         intra_graph, inter_graph = separate_graph(G, communities)
+
+    simple_graph = create_using != nx.MultiDiGraph
+    if G:
+        simple_graph = type(G) is not nx.MultiDiGraph
 
     if "betweenness" in cn_measures:
         nx.set_node_attributes(G, cal_betweenness_centrality(G), "betweenness")
@@ -67,15 +74,15 @@ def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_fea
         nx.set_node_attributes(G, nx.degree_centrality(
             inter_graph), "global_degree")
         print("calculated global_degree")
-    if "eigenvector" in cn_measures:
+    if "eigenvector" in cn_measures and simple_graph:
         nx.set_node_attributes(G, nx.eigenvector_centrality(
             G, max_iter=600), "eigenvector")
         print("calculated eigenvector")
-    if "local_eigenvector" in cn_measures:
+    if "local_eigenvector" in cn_measures and simple_graph:
         nx.set_node_attributes(G, nx.eigenvector_centrality(
             intra_graph), "local_eigenvector")
         print("calculated local_eigenvector")
-    if "global_eigenvector" in cn_measures:
+    if "global_eigenvector" in cn_measures and simple_graph:
         nx.set_node_attributes(G, nx.eigenvector_centrality(
             inter_graph), "global_eigenvector")
         print("calculated global_eigenvector")
@@ -101,7 +108,7 @@ def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_fea
         nx.set_node_attributes(G, nx.pagerank(
             inter_graph, alpha=0.85), "global_pagerank")
         print("calculated global_pagerank")
-    if "k_core" in cn_measures:
+    if "k_core" in cn_measures and simple_graph:
         nx.set_node_attributes(G, cal_k_core(G), "k_core")
         print("calculated k_core")
     if "k_truss" in cn_measures:

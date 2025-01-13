@@ -14,10 +14,11 @@ class CNN_LSTM(nn.Module):
         lstm_hidden_size=64,  # int: hidden size of the LSTM
         lstm_num_layers=1,   # int: number of LSTM layers
         lstm_dropout=0.5,    # float: dropout in LSTM if lstm_num_layers > 1
-        final_dropout=0.5    # float: dropout before final classification layer
+        final_dropout=0.5,    # float: dropout before final classification layer
+        model_name="cnn_lstm"
     ):
         super(CNN_LSTM, self).__init__()
-
+        self.model_name = model_name
         # ----------------------
         # 1) CNN feature extractor
         # ----------------------

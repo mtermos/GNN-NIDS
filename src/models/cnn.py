@@ -4,7 +4,8 @@ import torch.optim as optim
 
 
 class NIDSCNN(nn.Module):
-    def __init__(self, out_channels, num_features, num_classes, use_bn=True, dropout=0.5):
+    def __init__(self, out_channels, num_features, num_classes, use_bn=True, dropout=0.5,
+                 model_name="cnn"):
         """
         Args:
             out_channels (list): A list of integers specifying the out_channels for each Conv1D layer.
@@ -14,8 +15,10 @@ class NIDSCNN(nn.Module):
             use_bn       (bool): Whether to use Batch Normalization after each Conv1D.
             dropout     (float): Dropout probability in the classifier.
         """
-        super(NIDSCNN, self).__init__()
+        super().__init__()
 
+        # super(NIDSCNN, self).__init__()
+        self.model_name = model_name
         layers = []
         in_channels = 1  # Starting with 1 “channel” for the features
 
@@ -38,19 +41,18 @@ class NIDSCNN(nn.Module):
         # After each MaxPool1d(kernel_size=2), the feature length is halved.
         # final_length = num_features // (2 ** (number_of_pooling_layers))
         final_length = num_features // (2 ** len(out_channels))
+        in_feats = out_channels[-1] * final_length
 
         # Build Classifier
         self.classifier = nn.Sequential(
-            nn.Linear(out_channels[-1] * final_length, 64),
+            nn.Linear(in_feats, 64),
             nn.ReLU(),
             nn.Dropout(p=dropout),
             nn.Linear(64, num_classes)
         )
 
     def forward(self, x):
-        # x shape: (batch_size, 1, num_features)
         x = self.features(x)
-        # Flatten for fully connected layer
         x = x.view(x.size(0), -1)
         x = self.classifier(x)
         return x
