@@ -7,7 +7,8 @@ def plot_confusion_matrix(cm,
                           target_names,
                           title='Confusion matrix',
                           cmap=None,
-                          normalize=True,
+                          normalize=False,
+                          normalized=False,
                           file_path=None):
 
     accuracy = np.trace(cm) / float(np.sum(cm))
@@ -31,8 +32,8 @@ def plot_confusion_matrix(cm,
 
     thresh = cm.max() / 1.5 if normalize else cm.max() / 2
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        if normalize:
-            plt.text(j, i, "{:0.4f}".format(cm[i, j]),
+        if normalize or normalized:
+            plt.text(j, i, "{:0.3f}".format(cm[i, j]),
                      horizontalalignment="center",
                      color="white" if cm[i, j] > thresh else "black")
         else:
