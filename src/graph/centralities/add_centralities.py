@@ -14,6 +14,7 @@ from src.graph.centralities.modularity_vitality import modularity_vitality
 def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_features, G=None, create_using=nx.DiGraph(), communities=None, G1=None, part=None):
 
     if not G:
+        print("constructing graph")
         G = nx.from_pandas_edgelist(
             df, source=dataset.src_ip_col, target=dataset.dst_ip_col, create_using=create_using)
         G.remove_nodes_from(list(nx.isolates(G)))
@@ -27,6 +28,7 @@ def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_fea
         need_communities = True
 
     if need_communities and not communities:
+        print("calculating communities")
         if not G1:
             G1 = ig.Graph.from_networkx(G)
             labels = [G.nodes[node]['label'] for node in G.nodes()]
@@ -53,72 +55,91 @@ def add_centralities(df, new_path, graph_path, dataset, cn_measures, network_fea
         simple_graph = type(G) is not nx.MultiDiGraph
 
     if "betweenness" in cn_measures:
+        print("calculating betweenness")
         nx.set_node_attributes(G, cal_betweenness_centrality(G), "betweenness")
         print("calculated betweenness")
     if "local_betweenness" in cn_measures:
+        print("calculating local_betweenness")
         nx.set_node_attributes(G, cal_betweenness_centrality(
             intra_graph), "local_betweenness")
         print("calculated local_betweenness")
     if "global_betweenness" in cn_measures:
+        print("calculating global_betweenness")
         nx.set_node_attributes(G, cal_betweenness_centrality(
             inter_graph), "global_betweenness")
         print("calculated global_betweenness")
     if "degree" in cn_measures:
+        print("calculating degree")
         nx.set_node_attributes(G, nx.degree_centrality(G), "degree")
         print("calculated degree")
     if "local_degree" in cn_measures:
+        print("calculating local_degree")
         nx.set_node_attributes(
             G, nx.degree_centrality(intra_graph), "local_degree")
         print("calculated local_degree")
     if "global_degree" in cn_measures:
+        print("calculating global_degree")
         nx.set_node_attributes(G, nx.degree_centrality(
             inter_graph), "global_degree")
         print("calculated global_degree")
     if "eigenvector" in cn_measures and simple_graph:
+        print("calculating eigenvector")
         nx.set_node_attributes(G, nx.eigenvector_centrality(
             G, max_iter=600), "eigenvector")
         print("calculated eigenvector")
     if "local_eigenvector" in cn_measures and simple_graph:
+        print("calculating local_eigenvector")
         nx.set_node_attributes(G, nx.eigenvector_centrality(
             intra_graph), "local_eigenvector")
         print("calculated local_eigenvector")
     if "global_eigenvector" in cn_measures and simple_graph:
+        print("calculating global_eigenvector")
         nx.set_node_attributes(G, nx.eigenvector_centrality(
             inter_graph), "global_eigenvector")
         print("calculated global_eigenvector")
     if "closeness" in cn_measures:
+        print("calculating closeness")
         nx.set_node_attributes(G, nx.closeness_centrality(G), "closeness")
         print("calculated closeness")
     if "local_closeness" in cn_measures:
+        print("calculating local_closeness")
         nx.set_node_attributes(G, nx.closeness_centrality(
             intra_graph), "local_closeness")
         print("calculated local_closeness")
     if "global_closeness" in cn_measures:
+        print("calculating global_closeness")
         nx.set_node_attributes(G, nx.closeness_centrality(
             inter_graph), "global_closeness")
         print("calculated global_closeness")
     if "pagerank" in cn_measures:
+        print("calculating pagerank")
         nx.set_node_attributes(G, nx.pagerank(G, alpha=0.85), "pagerank")
         print("calculated pagerank")
     if "local_pagerank" in cn_measures:
+        print("calculating local_pagerank")
         nx.set_node_attributes(G, nx.pagerank(
             intra_graph, alpha=0.85), "local_pagerank")
         print("calculated local_pagerank")
     if "global_pagerank" in cn_measures:
+        print("calculating global_pagerank")
         nx.set_node_attributes(G, nx.pagerank(
             inter_graph, alpha=0.85), "global_pagerank")
         print("calculated global_pagerank")
     if "k_core" in cn_measures and simple_graph:
+        print("calculating k_core")
         nx.set_node_attributes(G, cal_k_core(G), "k_core")
         print("calculated k_core")
     if "k_truss" in cn_measures:
+        print("calculating k_truss")
         nx.set_node_attributes(G, cal_k_truss(G), "k_truss")
         print("calculated k_truss")
     if "Comm" in cn_measures:
+        print("calculating Comm")
         nx.set_node_attributes(
             G, comm_centrality(G, community_labels), "Comm")
         print("calculated Comm")
     if "mv" in cn_measures:
+        print("calculating mv")
         nx.set_node_attributes(G, modularity_vitality(G1, part), "mv")
         print("calculated mv")
 
