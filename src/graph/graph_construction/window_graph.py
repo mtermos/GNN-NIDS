@@ -6,9 +6,10 @@ import pickle
 import math
 
 from src.graph.graph_measures import calculate_graph_measures
+from src.graph.centralities.add_centralities import add_centralities
 
 
-def create_weightless_window_graph(df, src_ip_col, dst_ip_col, window_size=20000, multi_graph=False, line_graph=False, folder_path=None, test_percentage=None, edge_attr=None, file_type="gexf"):
+def create_weightless_window_graph(df, dataset, window_size=20000, cn_measures=None, network_features=None, multi_graph=False, line_graph=False, folder_path=None, test_percentage=None, edge_attr=None, file_type="gexf"):
 
     try:
         # Record the start time
@@ -45,10 +46,13 @@ def create_weightless_window_graph(df, src_ip_col, dst_ip_col, window_size=20000
 
             # Create a graph from the chunk
             G = nx.from_pandas_edgelist(df_chunk,
-                                        source=src_ip_col,
-                                        target=dst_ip_col,
+                                        source=dataset.src_ip_col,
+                                        target=dataset.dst_ip_col,
                                         edge_attr=edge_attr,
                                         create_using=base)
+            if cn_measures and network_features:
+                add_centralities(df=None, new_path=None, graph_path=None, dataset=dataset, G=G,
+                                 cn_measures=cn_measures, network_features=network_features, create_using=nx.MultiDiGraph())
             if line_graph:
                 G_line_graph = nx.line_graph(G)
                 G_line_graph.add_nodes_from(
