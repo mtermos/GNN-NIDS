@@ -23,39 +23,63 @@ class NIDSCNN(nn.Module):
         in_channels = 1  # Starting with 1 “channel” for the features
 
         # Build Convolutional Blocks Dynamically
-        for oc in out_channels:
-            layers.append(nn.Conv1d(in_channels, oc,
-                          kernel_size=3, stride=1, padding=1))
+        # for oc in out_channels:
+        #     layers.append(nn.Conv1d(in_channels, oc,
+        #                   kernel_size=3, stride=1, padding=1))
 
-            # Apply Batch Normalization if specified
-            if use_bn:
-                layers.append(nn.BatchNorm1d(oc))
+        #     # Apply Batch Normalization if specified
+        #     if use_bn:
+        #         layers.append(nn.BatchNorm1d(oc))
 
-            layers.append(nn.ReLU())
-            layers.append(nn.MaxPool1d(kernel_size=2))
+        #     layers.append(nn.ReLU())
+        #     layers.append(nn.MaxPool1d(kernel_size=2))
 
-            in_channels = oc
+        #     in_channels = oc
 
-        self.features = nn.Sequential(*layers)
+        # self.features = nn.Sequential(*layers)
 
-        # After each MaxPool1d(kernel_size=2), the feature length is halved.
-        # final_length = num_features // (2 ** (number_of_pooling_layers))
-        final_length = num_features // (2 ** len(out_channels))
-        in_feats = out_channels[-1] * final_length
+        # # After each MaxPool1d(kernel_size=2), the feature length is halved.
+        # # final_length = num_features // (2 ** (number_of_pooling_layers))
+        # final_length = num_features // (2 ** len(out_channels))
+        # in_feats = out_channels[-1] * final_length
 
-        # Build Classifier
-        self.classifier = nn.Sequential(
-            nn.Linear(in_feats, 64),
-            nn.ReLU(),
-            nn.Dropout(p=dropout),
-            nn.Linear(64, num_classes)
+        # # Build Classifier
+        # self.classifier = nn.Sequential(
+        #     nn.Linear(in_feats, 64),
+        #     nn.ReLU(),
+        #     nn.Dropout(p=dropout),
+        #     nn.Linear(64, num_classes)
+        # )
+        self.conv = nn.Conv1d(
+            in_channels=1,
+            out_channels=64,
+            kernel_size=3,
+            stride=1,
+            padding=0,  # Keras default is 'valid', which means no padding
         )
+        self.pool = nn.MaxPool1d(kernel_size=2)
+        self.bn = nn.BatchNorm1d(64)
+        # After the pool, we flatten. We'll do that in forward().
+        # <-- you need to compute the in_features here
+        in_features = 64 * ((num_features - 2) // 2)
+        self.fc1 = nn.Linear(in_features, 100)
+        self.fc2 = nn.Linear(100, num_classes)
 
     def forward(self, x):
-        x = self.features(x)
-        x = x.view(x.size(0), -1)
-        x = self.classifier(x)
+        # x shape: (batch_size, 1, input_dim)
+        x = self.conv(x)
+        x = torch.relu(x)
+        x = self.pool(x)
+        x = self.bn(x)
+        x = x.view(x.size(0), -1)   # Flatten
+        x = torch.relu(self.fc1(x))
+        x = self.fc2(x)
         return x
+    # def forward(self, x):
+    #     x = self.features(x)
+    #     x = x.view(x.size(0), -1)
+    #     x = self.classifier(x)
+    #     return x
 
 
 if __name__ == "__main__":

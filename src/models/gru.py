@@ -15,7 +15,8 @@ class NIDSGRU(nn.Module):
         dropout=0.5,
         model_name="gru"
     ):
-        super(NIDSGRU, self).__init__()
+        # super(NIDSGRU, self).__init__()
+        super().__init__()
 
         self.model_name = model_name
         self.num_features = num_features
@@ -35,7 +36,8 @@ class NIDSGRU(nn.Module):
         if self.use_bn:
             self.bn = nn.BatchNorm1d(hidden_size)
 
-        self.fc = nn.Linear(hidden_size, num_classes)
+        self.fc = nn.Linear(hidden_size, 100)
+        self.fc2 = nn.Linear(100, num_classes)
 
     def forward(self, x):
         """
@@ -56,6 +58,7 @@ class NIDSGRU(nn.Module):
             out = self.bn(out)
 
         out = self.fc(out)
+        out = self.fc2(out)
         return out
 
 
