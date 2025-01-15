@@ -3,7 +3,7 @@ import time
 import numpy as np
 from src.models_gdlc_keras.model import Model
 from keras import layers
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.utils import timeseries_dataset_from_array
 from keras.regularizers import l1, l2
@@ -53,21 +53,22 @@ class MyLSTM(Model):
         self.model = Sequential()
 
     def model_name(self):
-        classification = "bc"  # binary classification
-        if self.multi_class:
-            classification = "mc"  # multi-class classification
+        return "lstm"
+        # classification = "bc"  # binary classification
+        # if self.multi_class:
+        #     classification = "mc"  # multi-class classification
 
-        network_features_string = ""
-        if self.network_features:
-            network_features_string = "nf"
-            for f in self.network_features:
-                network_features_string += "-" + f
+        # network_features_string = ""
+        # if self.network_features:
+        #     network_features_string = "nf"
+        #     for f in self.network_features:
+        #         network_features_string += "-" + f
 
-        layers_name = ""
-        for layer in self.cells:
-            layers_name += "-{}".format(layer)
+        # layers_name = ""
+        # for layer in self.cells:
+        #     layers_name += "-{}".format(layer)
 
-        return "lstm sl-{} {} layers{}".format(self.sequence_length, classification, network_features_string, layers_name)
+        # return "lstm sl-{} {} layers{}".format(self.sequence_length, classification, network_features_string, layers_name)
 
     def build(self):
         model = Sequential()
@@ -144,48 +145,56 @@ class MyLSTM(Model):
 
         return data_reshaped, labels_reshaped
 
-    def train(self, training_data, training_labels):
+    def train(self, training_data, training_labels, X_validation, y_validation):
         if self.model == None:
             self.build()
-        if os.path.exists("./models/weights/" + self.dataset_name + "/" + self.model_name() + "/best.hdf5"):
-            self.model.load_weights(
-                "./models/weights/" + self.dataset_name + "/" + self.model_name() + "/best.hdf5")
+
+        early_stopping = EarlyStopping(
+            monitor='val_loss',
+            patience=self.early_stop_patience,
+            restore_best_weights=True
+        )
+        checkpoint = ModelCheckpoint(
+            filepath="temp/best_model_lstm.keras",      # File path to save the model
+            # Metric to monitor (e.g., validation loss)
+            monitor='val_loss',
+            verbose=1,                     # Verbosity mode, 1 = display messages
+            save_best_only=True,           # Only save when the metric improves
+            mode='min'                     # For "val_loss", lower is better
+        )
+
+        callbacks_list = [early_stopping, checkpoint]
+
+        if self.already_sequenced:
+            # print(f"==>> already_sequenced")
+            print(f"==>> training_data.shape: {training_data.shape}")
+            # print(f"==>> training_data.head: {training_data[:5]}")
+            print(f"==>> training_labels.shape: {training_labels.shape}")
+            # print(f"==>> training_labels.head: {training_labels[:5]}")
+            history = self.model.fit(training_data, training_labels, epochs=self.epochs,
+                                     batch_size=self.batch_size, shuffle=False, callbacks=callbacks_list)
+        elif self.use_generator:
+            training_generator = self.create_generator(
+                training_data, training_labels, self.batch_size)
+            validation_generator = self.create_generator(
+                X_validation, y_validation, self.batch_size)
+            history = self.model.fit(training_generator, epochs=self.epochs, validation_data=validation_generator,
+                                     shuffle=False, callbacks=callbacks_list)
         else:
-            filepath = "./models/weights/" + self.dataset_name + "/" + \
-                self.model_name() + \
-                "/weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
-            checkpoint = ModelCheckpoint(
-                filepath, verbose=1, save_best_only=False, mode='max')
-            earlyStopping = EarlyStopping(
-                monitor="loss", patience=self.early_stop_patience)
-            callbacks_list = [checkpoint, earlyStopping]
-
-            if self.already_sequenced:
-                # print(f"==>> already_sequenced")
-                print(f"==>> training_data.shape: {training_data.shape}")
-                # print(f"==>> training_data.head: {training_data[:5]}")
-                print(f"==>> training_labels.shape: {training_labels.shape}")
-                # print(f"==>> training_labels.head: {training_labels[:5]}")
-                self.model.fit(training_data, training_labels, epochs=self.epochs,
-                               batch_size=self.batch_size, shuffle=False, callbacks=callbacks_list)
-            elif self.use_generator:
-                training_generator = self.create_generator(
-                    training_data, training_labels, self.batch_size)
-                self.model.fit(training_generator, epochs=self.epochs,
-                               shuffle=False, callbacks=callbacks_list)
+            if self.sequence_length == 1:
+                x_train = np.reshape(
+                    training_data, (training_data.shape[0], 1, training_data.shape[1]))
+                y_train = training_labels
             else:
-                if self.sequence_length == 1:
-                    x_train = np.reshape(
-                        training_data, (training_data.shape[0], 1, training_data.shape[1]))
-                    y_train = training_labels
-                else:
-                    x_train, y_train = self.create_sequences(
-                        training_data, training_labels)
+                x_train, y_train = self.create_sequences(
+                    training_data, training_labels)
 
-                self.model.fit(x_train, y_train, epochs=self.epochs,
-                               batch_size=self.batch_size, shuffle=False, callbacks=callbacks_list)
+            history = self.model.fit(x_train, y_train, epochs=self.epochs,
+                                     batch_size=self.batch_size, shuffle=False, callbacks=callbacks_list)
+        return history
 
     def predict(self, testing_data):
+        self.model = load_model("temp/best_model_lstm.keras")
         start = time.time()
         testing_labels = np.zeros(testing_data.shape[0])
 
@@ -223,7 +232,7 @@ class MyLSTM(Model):
         # return a tupil of the predictions and the time it took to predict
         return (y_predictions, end-start)
 
-    def evaluate(self, predictions, labels, time, verbose=0):
+    def evaluate(self, predictions, labels, time, labels_names, labels_dict, verbose=0):
         if self.already_sequenced:
             return super().evaluate(
                 predictions,
@@ -236,5 +245,7 @@ class MyLSTM(Model):
                 predictions,
                 np.array(labels[self.sequence_length - 1:]),
                 time,
+                labels_names,
+                labels_dict,
                 verbose
             )

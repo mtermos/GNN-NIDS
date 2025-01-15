@@ -3,7 +3,7 @@ import time
 import numpy as np
 from src.models_gdlc_keras.model import Model
 from keras import layers
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.utils import timeseries_dataset_from_array
 from keras.utils import plot_model
@@ -99,29 +99,34 @@ class MyCNN(Model):
     def train(self, training_data, training_labels, x_val, y_val):
         if self.model == None:
             self.build()
-        if os.path.exists("./models/weights/" + self.dataset_name + "/" + self.model_name() + "/best.hdf5"):
-            self.model.load_weights(
-                "./models/weights/" + self.dataset_name + "/" + self.model_name() + "/best.hdf5")
-        else:
-            filepath = "./models/weights/" + self.dataset_name + "/" + \
-                self.model_name() + \
-                "/weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
-            checkpoint = ModelCheckpoint(
-                filepath, verbose=1, save_best_only=False, mode='max')
-            earlyStopping = EarlyStopping(
-                monitor="loss", patience=self.early_stop_patience)
-            callbacks_list = [checkpoint, earlyStopping]
 
-            # X_train = np.reshape(training, (training.shape[0],training.shape[1],1))
+        early_stopping = EarlyStopping(
+            monitor='val_loss',
+            patience=self.early_stop_patience,
+            restore_best_weights=True
+        )
+        checkpoint = ModelCheckpoint(
+            filepath="temp/best_model_cnn.keras",      # File path to save the model
+            # Metric to monitor (e.g., validation loss)
+            monitor='val_loss',
+            verbose=1,                     # Verbosity mode, 1 = display messages
+            save_best_only=True,           # Only save when the metric improves
+            mode='min'                     # For "val_loss", lower is better
+        )
 
-            self.model.fit(training_data, training_labels, epochs=self.epochs,
-                           validation_data=(x_val, y_val),
-                           batch_size=self.batch_size, callbacks=callbacks_list)
+        callbacks_list = [early_stopping, checkpoint]
+        # X_train = np.reshape(training, (training.shape[0],training.shape[1],1))
+
+        history = self.model.fit(training_data, training_labels, epochs=self.epochs,
+                                 validation_data=(x_val, y_val),
+                                 batch_size=self.batch_size, callbacks=callbacks_list)
+        return history
 
     def predict(self, testing_data):
         start = time.time()
         # X_test = np.reshape(testing_data, (testing_data.shape[0],testing_data.shape[1],1))
 
+        self.model = load_model("temp/best_model_cnn.keras")
         y_predictions = self.model.predict(
             testing_data, batch_size=self.batch_size)
         end = time.time()
