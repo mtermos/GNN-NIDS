@@ -86,18 +86,18 @@ class MyGRU(Model):
         print(f"==>> LAMBD: {LAMBD}")
         print(f"==>> datetime.datetime: {datetime.datetime}")
 
-        # model.add(layers.GRU(units=80,
-        #                      input_shape=(self.sequence_length,
-        #                                   self.input_dim),
-        #                      kernel_regularizer=l1(LAMBD),
-        #                      recurrent_regularizer=l1(LAMBD),
-        #                      bias_regularizer=l1(LAMBD),
-        #                      return_sequences=True,
-        #                      #  return_sequences=False,
-        #                      # return_state=False,
-        #                      dropout=0.2,
-        #                      #  stateful=False, unroll=False
-        #                      ))
+        model.add(layers.GRU(units=80,
+                             input_shape=(self.sequence_length,
+                                          self.input_dim),
+                             kernel_regularizer=l2(LAMBD),
+                             recurrent_regularizer=l2(LAMBD),
+                             bias_regularizer=l2(LAMBD),
+                             #  return_sequences=True,
+                             return_sequences=False,
+                             # return_state=False,
+                             dropout=0.2,
+                             #  stateful=False, unroll=False
+                             ))
         # model.add(layers.GRU(units=20,
         #                      input_shape=(self.sequence_length,
         #                                   self.input_dim),
@@ -110,17 +110,19 @@ class MyGRU(Model):
         #                      dropout=0.2,
         #                      #  stateful=False, unroll=False
         #                      ))
-        # model.add(layers.BatchNormalization())
+        model.add(layers.BatchNormalization())
         # model.add(layers.GRU(80, return_sequences=False))
 
         # model.add(layers.GRU(80, input_shape=(
         #     self.sequence_length, self.input_dim)))
         # model.add(layers.Normalization())
 
-        model.add(layers.GRU(80, input_shape=(
-            self.sequence_length, self.input_dim)))
-        model.add(layers.Dropout(0.2))
-        model.add(layers.Dense(100, activation='relu'))
+        # model.add(layers.GRU(80, input_shape=(
+        #     self.sequence_length, self.input_dim)))
+        # model.add(layers.Dropout(0.2))
+        model.add(layers.Dense(100, activation='relu',
+                  kernel_regularizer=l2(LAMBD)))
+        model.add(layers.BatchNormalization())
 
         if self.multi_class:
             model.add(layers.Dense(self.num_classes, activation='softmax'))
