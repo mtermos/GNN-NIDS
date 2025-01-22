@@ -82,32 +82,35 @@ class MyLSTM(Model):
         model.add(layers.LSTM(units=80,
                               input_shape=(self.sequence_length,
                                            self.input_dim),
-                              kernel_regularizer=l1(LAMBD),
-                              recurrent_regularizer=l1(LAMBD),
-                              bias_regularizer=l1(LAMBD),
-                              return_sequences=True,
-                              #  return_sequences=False,
-                              # return_state=False,
-                              dropout=0.2,
-                              #  stateful=False, unroll=False
-                              ))
-        model.add(layers.LSTM(units=20,
-                              input_shape=(self.sequence_length,
-                                           self.input_dim),
-                              kernel_regularizer=l1(LAMBD),
-                              recurrent_regularizer=l1(LAMBD),
-                              bias_regularizer=l1(LAMBD),
+                              kernel_regularizer=l2(LAMBD),
+                              recurrent_regularizer=l2(LAMBD),
+                              bias_regularizer=l2(LAMBD),
+                              #   return_sequences=True,
                               return_sequences=False,
-
                               # return_state=False,
                               dropout=0.2,
                               #  stateful=False, unroll=False
                               ))
+        # model.add(layers.LSTM(units=20,
+        #                       input_shape=(self.sequence_length,
+        #                                    self.input_dim),
+        #                       kernel_regularizer=l1(LAMBD),
+        #                       recurrent_regularizer=l1(LAMBD),
+        #                       bias_regularizer=l1(LAMBD),
+        #                       return_sequences=False,
+
+        #                       # return_state=False,
+        #                       dropout=0.2,
+        #                       #  stateful=False, unroll=False
+        #                       ))
 
         # model.add(layers.LSTM(80, input_shape=(
         #     self.input_dim, self.sequence_length)))
         # model.add(layers.Dropout(0.2))
-        model.add(layers.Dense(100, activation='relu'))
+        model.add(layers.BatchNormalization())
+        model.add(layers.Dense(100, activation='relu',
+                  kernel_regularizer=l2(LAMBD)))
+        model.add(layers.BatchNormalization())
 
         if self.multi_class:
             model.add(layers.Dense(self.num_classes, activation='softmax'))
