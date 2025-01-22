@@ -11,6 +11,7 @@ from src.models.gat import GAT
 
 from src.models.model import Model, LineGraphModel
 
+from src.models.fnn import NIDSFNN
 from src.models.cnn import NIDSCNN
 from src.models.lstm import NIDSLSTM
 from src.models.gru import NIDSGRU
