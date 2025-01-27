@@ -113,9 +113,10 @@ class MLPPredictor(nn.Module):
         self.activation = activation
         self.residual = residual
         if residual:
-            self.W = nn.Linear(in_features * 2 + edim, out_classes)
+            self.W = nn.Linear(in_features * 2 + edim, 100)
         else:
-            self.W = nn.Linear(in_features * 2, out_classes)
+            self.W = nn.Linear(in_features * 2, 100)
+        self.linear = nn.Linear(100, out_classes)
 
     def apply_edges(self, edges):
         h_u = edges.src['h']
@@ -126,7 +127,7 @@ class MLPPredictor(nn.Module):
             score = self.W(th.cat([h_u, h_v, h_uv], 1))
         else:
             score = self.W(th.cat([h_u, h_v], 1))
-
+        score = self.linear(score)
         return {'score': score}
 
     def forward(self, graph, h):

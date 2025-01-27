@@ -43,9 +43,9 @@ class NIDSFNN(nn.Module):
 
 if __name__ == "__main__":
     # Example usage:
-    hidden_units = [128, 64]  # Hidden layers with 128 and 64 neurons
+    hidden_units = [128, 64, 128]  # Hidden layers with 128 and 64 neurons
     num_features = 32         # e.g., 32 features in each input
-    num_classes = 2           # e.g., binary classification
+    num_classes = 5           # e.g., binary classification
 
     # Create the model
     model = NIDSFNN(
