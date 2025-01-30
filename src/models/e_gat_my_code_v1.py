@@ -9,15 +9,11 @@ class GATLayer(nn.Module):
         self.linear = nn.Linear(ndim_in + edim, ndim_out, bias=False)
         self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
         self.attn_fc = nn.Linear(2*ndim_in, 1)
-        # self.attn_fc = nn.Linear(2*ndim_in + ndim_out, 1)
         self.activation = activation
         self.reset_parameters()
 
     def edge_attention(self, edges):
-        z2 = th.cat([edges.src["h"], edges.dst["h"]], dim=2)
-        # z2 = th.cat([edges.src["h"], edges.dst["h"], edges.data["h"]], dim=2)
-        a = self.attn_fc(z2)
-        return {"e": F.leaky_relu(a)}
+        return {"e": self.activation(self.attn_fc(th.cat([edges.src["h"], edges.dst["h"]], dim=2)))}
 
     def reset_parameters(self):
         """Reinitialize learnable parameters."""
@@ -30,7 +26,7 @@ class GATLayer(nn.Module):
 
     def reduce_func(self, nodes):
         alpha = F.softmax(nodes.mailbox['e'], dim=1)
-        z = th.mean(alpha * nodes.mailbox['m'], dim=1)
+        z = th.sum(alpha * nodes.mailbox['m'], dim=1)
         return {'z': z}
 
     def forward(self, g, nfeats, efeats):
@@ -99,7 +95,8 @@ class EGAT(nn.Module):
     def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=False, num_class=2):
         super().__init__()
 
-        print("my original code")
+        print("e_gat sum aggragation")
+
         self.gnn = GAT(ndim_in, edim, ndim_out, num_layers,
                        activation, dropout)
 
