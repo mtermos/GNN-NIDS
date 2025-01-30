@@ -1,0 +1,1086 @@
+[
+    {
+        "name": "cic_ton_iot",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "Benign": {
+                    "count": 2514059,
+                    "proportion": 0.4698663678331875
+                },
+                "xss": {
+                    "count": 2149308,
+                    "proportion": 0.4016960394783148
+                },
+                "password": {
+                    "count": 340208,
+                    "proportion": 0.0635833515712213
+                },
+                "injection": {
+                    "count": 277696,
+                    "proportion": 0.05190013873254559
+                },
+                "scanning": {
+                    "count": 36205,
+                    "proportion": 0.006766552355135879
+                },
+                "backdoor": {
+                    "count": 27145,
+                    "proportion": 0.005073278930538971
+                },
+                "ransomware": {
+                    "count": 5098,
+                    "proportion": 0.0009527933684983487
+                },
+                "mitm": {
+                    "count": 517,
+                    "proportion": 9.662498460448142e-05
+                },
+                "ddos": {
+                    "count": 202,
+                    "proportion": 3.775289533869487e-05
+                },
+                "dos": {
+                    "count": 145,
+                    "proportion": 2.709985061440968e-05
+                }
+            },
+            "Multi-class Gini Coefficient": 0.7512130360373813,
+            "Binary Classification Gini Coefficient": 0.03013363216681242,
+            "length": 5350583,
+            "num_benign": 2514059,
+            "percentage_of_benign_records": 46.98663678331875,
+            "num_attack": 2836524,
+            "percentage_of_attack_records": 53.01336321668125,
+            "attacks": [
+                "Benign",
+                "mitm",
+                "scanning",
+                "dos",
+                "ddos",
+                "injection",
+                "password",
+                "backdoor",
+                "ransomware",
+                "xss"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 352405,
+            "total_mixed_class_pairs": 48,
+            "graph_measures": {
+                "number_of_nodes": 142669,
+                "number_of_edges": 5350583,
+                "max_degree": 2066788,
+                "avg_degree": 75.00694614807702,
+                "density": 0.00026287235451564827
+            },
+            "degree_entropy": 2.075544718849938,
+            "degree_relative_entropy": 0.174881640346603,
+            "degree_alpha": 1.5395474796500999,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 196.95833802169486,
+            "pagerank_entropy": 0.12858588203724175,
+            "pagerank_relative_entropy": 0.010834413622534657,
+            "pagerank_alpha": 1.4073992457593363,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 165.84559037923003,
+            "degree_kurtosis": 31888.09125832449,
+            "total_nodes": 142669,
+            "Number of Attackers": 11,
+            "Number of Victims": 116,
+            "Proportion of Attackers": 7.710154273177775e-05,
+            "Proportion of Victims": 0.0008130708142623836,
+            "intersection between attacks and victims": 5,
+            "Mean Clustering Coefficient": 0.284710110311389,
+            "Standard Deviation of Clustering Coefficients": 0.3607588484916365,
+            "Graph Degree Assortativity Coefficient": 0.3112981737573859,
+            "diameter": "not applicable",
+            "Mean Path Length": 2.478833195917323,
+            "Standard Deviation of Path Lengths": 1.2253183471109323
+        }
+    },
+    {
+        "name": "cic_ids_2017",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "BENIGN": {
+                    "count": 2265910,
+                    "proportion": 0.804976272506304
+                },
+                "DoS Hulk": {
+                    "count": 222563,
+                    "proportion": 0.07906665937209356
+                },
+                "PortScan": {
+                    "count": 158804,
+                    "proportion": 0.05641594413683293
+                },
+                "DDoS": {
+                    "count": 128025,
+                    "proportion": 0.04548154484848011
+                },
+                "DoS GoldenEye": {
+                    "count": 10293,
+                    "proportion": 0.0036566416022292972
+                },
+                "FTP-Patator": {
+                    "count": 7935,
+                    "proportion": 0.0028189498798882225
+                },
+                "SSH-Patator": {
+                    "count": 5897,
+                    "proportion": 0.0020949398162193886
+                },
+                "DoS slowloris": {
+                    "count": 5769,
+                    "proportion": 0.002049467152750492
+                },
+                "DoS Slowhttptest": {
+                    "count": 5499,
+                    "proportion": 0.001953548253245789
+                },
+                "Bot": {
+                    "count": 1956,
+                    "proportion": 0.0006948791386340722
+                },
+                "Web Attack \ufffd Brute Force": {
+                    "count": 1507,
+                    "proportion": 0.0005353695613095843
+                },
+                "Web Attack \ufffd XSS": {
+                    "count": 652,
+                    "proportion": 0.00023162637954469076
+                },
+                "Infiltration": {
+                    "count": 36,
+                    "proportion": 1.2789186600627097e-05
+                },
+                "Web Attack \ufffd Sql Injection": {
+                    "count": 21,
+                    "proportion": 7.460358850365807e-06
+                },
+                "Heartbleed": {
+                    "count": 11,
+                    "proportion": 3.907807016858279e-06
+                }
+            },
+            "Multi-class Gini Coefficient": 0.8781240726359485,
+            "Binary Classification Gini Coefficient": 0.3049762725063041,
+            "length": 2814878,
+            "num_benign": 2265910,
+            "percentage_of_benign_records": 80.4976272506304,
+            "num_attack": 548968,
+            "percentage_of_attack_records": 19.5023727493696,
+            "attacks": [
+                "BENIGN",
+                "DDoS",
+                "PortScan",
+                "Bot",
+                "Infiltration",
+                "Web Attack \ufffd Brute Force",
+                "Web Attack \ufffd XSS",
+                "Web Attack \ufffd Sql Injection",
+                "FTP-Patator",
+                "SSH-Patator",
+                "DoS slowloris",
+                "DoS Slowhttptest",
+                "DoS Hulk",
+                "DoS GoldenEye",
+                "Heartbleed"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 113738,
+            "total_mixed_class_pairs": 10,
+            "graph_measures": {
+                "number_of_nodes": 19129,
+                "number_of_edges": 2814878,
+                "max_degree": 983995,
+                "avg_degree": 294.30477285796434,
+                "density": 0.007693035676964772
+            },
+            "degree_entropy": 4.34334261896162,
+            "degree_relative_entropy": 0.44054771215050265,
+            "degree_alpha": 2.046121885777477,
+            "degree_scale_free": 1,
+            "pagerank_skewness": 61.295119645121154,
+            "pagerank_entropy": 8.19133676106993,
+            "pagerank_relative_entropy": 0.8308519465605516,
+            "pagerank_alpha": 2.1935573787954463,
+            "pagerank_scale_free": 1,
+            "is_strongly_connected": false,
+            "degree_skewness": 64.96066304330043,
+            "degree_kurtosis": 4971.218852723598,
+            "total_nodes": 19129,
+            "Number of Attackers": 10,
+            "Number of Victims": 11,
+            "Proportion of Attackers": 0.0005227664802132888,
+            "Proportion of Victims": 0.0005750431282346176,
+            "intersection between attacks and victims": 8,
+            "Mean Clustering Coefficient": 0.2931404816219034,
+            "Standard Deviation of Clustering Coefficients": 0.34884036980059285,
+            "Graph Degree Assortativity Coefficient": 0.4661268147029133,
+            "diameter": "not applicable",
+            "Mean Path Length": 2.6831521780984993,
+            "Standard Deviation of Path Lengths": 0.776521382340659
+        }
+    },
+    {
+        "name": "cic_bot_iot",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "DDoS": {
+                    "count": 4913860,
+                    "proportion": 0.36595445263972093
+                },
+                "DoS": {
+                    "count": 4909359,
+                    "proportion": 0.36561924549272623
+                },
+                "Reconnaissance": {
+                    "count": 3513408,
+                    "proportion": 0.2616572921369385
+                },
+                "Benign": {
+                    "count": 89190,
+                    "proportion": 0.00664232958019494
+                },
+                "Theft": {
+                    "count": 1701,
+                    "proportion": 0.0001266801504194595
+                }
+            },
+            "Multi-class Gini Coefficient": 0.43625298435645365,
+            "Binary Classification Gini Coefficient": 0.49335767041980505,
+            "length": 13427518,
+            "num_benign": 89190,
+            "percentage_of_benign_records": 0.664232958019494,
+            "num_attack": 13338328,
+            "percentage_of_attack_records": 99.3357670419805,
+            "attacks": [
+                "Reconnaissance",
+                "DDoS",
+                "DoS",
+                "Benign",
+                "Theft"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 368,
+            "total_mixed_class_pairs": 32,
+            "graph_measures": {
+                "number_of_nodes": 294,
+                "number_of_edges": 13427518,
+                "max_degree": 6536889,
+                "avg_degree": 91343.65986394558,
+                "density": 155.87655266884911
+            },
+            "degree_entropy": 2.863554396676599,
+            "degree_relative_entropy": 0.5038293670359534,
+            "degree_alpha": 1.6541602361209478,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 12.037411013666604,
+            "pagerank_entropy": 3.0261226972778843,
+            "pagerank_relative_entropy": 0.5324325198474089,
+            "pagerank_alpha": 3.4707599078778792,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 7.40154205189297,
+            "degree_kurtosis": 61.60880286553903,
+            "total_nodes": 294,
+            "Number of Attackers": 8,
+            "Number of Victims": 8,
+            "Proportion of Attackers": 0.027210884353741496,
+            "Proportion of Victims": 0.027210884353741496,
+            "intersection between attacks and victims": 8,
+            "Mean Clustering Coefficient": 0.004432457520321025,
+            "Standard Deviation of Clustering Coefficients": 0.042128484325942225,
+            "Graph Degree Assortativity Coefficient": 0.13454510727772168,
+            "diameter": "not applicable",
+            "Mean Path Length": 2.15975091660362,
+            "Standard Deviation of Path Lengths": 0.6389227631459695
+        }
+    },
+    {
+        "name": "cic_ton_iot_modified",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "xss": {
+                    "count": 2149308,
+                    "proportion": 0.4372876183345575
+                },
+                "Benign": {
+                    "count": 2101607,
+                    "proportion": 0.42758260784644836
+                },
+                "password": {
+                    "count": 340206,
+                    "proportion": 0.06921663692831667
+                },
+                "injection": {
+                    "count": 277689,
+                    "proportion": 0.05649723606281879
+                },
+                "scanning": {
+                    "count": 36176,
+                    "proportion": 0.007360190759477446
+                },
+                "ransomware": {
+                    "count": 5098,
+                    "proportion": 0.001037213967597745
+                },
+                "backdoor": {
+                    "count": 5006,
+                    "proportion": 0.0010184961007835055
+                }
+            },
+            "Multi-class Gini Coefficient": 0.6353584573222465,
+            "Binary Classification Gini Coefficient": 0.07241739215355159,
+            "length": 4915090,
+            "num_benign": 2101607,
+            "percentage_of_benign_records": 42.75826078464484,
+            "num_attack": 2813483,
+            "percentage_of_attack_records": 57.24173921535516,
+            "attacks": [
+                "Benign",
+                "backdoor",
+                "ransomware",
+                "xss",
+                "password",
+                "injection",
+                "scanning"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 166990,
+            "total_mixed_class_pairs": 46,
+            "graph_measures": {
+                "number_of_nodes": 65543,
+                "number_of_edges": 4915090,
+                "max_degree": 2066788,
+                "avg_degree": 149.98062340753398,
+                "density": 0.0011441565973538646
+            },
+            "degree_entropy": 1.9570946434109768,
+            "degree_relative_entropy": 0.17646647157461223,
+            "degree_alpha": 5.279120210850335,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 240.246144421841,
+            "pagerank_entropy": 0.21472860347207362,
+            "pagerank_relative_entropy": 0.019361556748639933,
+            "pagerank_alpha": 1.3752143784320705,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 114.57177276598121,
+            "degree_kurtosis": 15320.122978370124,
+            "total_nodes": 65543,
+            "Number of Attackers": 8,
+            "Number of Victims": 60,
+            "Proportion of Attackers": 0.0001220572753764704,
+            "Proportion of Victims": 0.0009154295653235281,
+            "intersection between attacks and victims": 5,
+            "Mean Clustering Coefficient": 0.5307952651232469,
+            "Standard Deviation of Clustering Coefficients": 0.4090426880595818,
+            "Graph Degree Assortativity Coefficient": 0.20610127412201426,
+            "diameter": "not applicable",
+            "Mean Path Length": 2.29734372044162,
+            "Standard Deviation of Path Lengths": 1.1060023582525222
+        }
+    },
+    {
+        "name": "ccd_inid_modified",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "none": {
+                    "count": 33413,
+                    "proportion": 0.5204598202464212
+                },
+                "arp_dos": {
+                    "count": 8591,
+                    "proportion": 0.13381828377389057
+                },
+                "hydra_brute": {
+                    "count": 7554,
+                    "proportion": 0.11766538419601552
+                },
+                "slowloris": {
+                    "count": 5890,
+                    "proportion": 0.09174597735167214
+                },
+                "mitm": {
+                    "count": 5473,
+                    "proportion": 0.08525054907397311
+                },
+                "udp_dos": {
+                    "count": 3278,
+                    "proportion": 0.05105998535802738
+                }
+            },
+            "Multi-class Gini Coefficient": 0.4197702975643442,
+            "Binary Classification Gini Coefficient": 0.020459820246421234,
+            "length": 64199,
+            "num_benign": 33413,
+            "percentage_of_benign_records": 52.04598202464213,
+            "num_attack": 30786,
+            "percentage_of_attack_records": 47.95401797535787,
+            "attacks": [
+                "mitm",
+                "arp_dos",
+                "udp_dos",
+                "hydra_brute",
+                "slowloris",
+                "none"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 140,
+            "total_mixed_class_pairs": 37,
+            "graph_measures": {
+                "number_of_nodes": 103,
+                "number_of_edges": 64199,
+                "max_degree": 25411,
+                "avg_degree": 1246.5825242718447,
+                "density": 6.110698648391395
+            },
+            "degree_entropy": 3.7753443308181303,
+            "degree_relative_entropy": 0.8145771501216145,
+            "degree_alpha": 1.3372434963069129,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 4.847844550762225,
+            "pagerank_entropy": 3.261606386442822,
+            "pagerank_relative_entropy": 0.7037318459668305,
+            "pagerank_alpha": 1.687601996739835,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 4.318782293210836,
+            "degree_kurtosis": 17.91140499255244,
+            "total_nodes": 103,
+            "Number of Attackers": 49,
+            "Number of Victims": 51,
+            "Proportion of Attackers": 0.47572815533980584,
+            "Proportion of Victims": 0.49514563106796117,
+            "intersection between attacks and victims": 32,
+            "Mean Clustering Coefficient": 0.009457087855040461,
+            "Standard Deviation of Clustering Coefficients": 0.05934704415514862,
+            "Graph Degree Assortativity Coefficient": 0.13914525615390078,
+            "diameter": "not applicable",
+            "Mean Path Length": 2.7826576576576576,
+            "Standard Deviation of Path Lengths": 1.120575849352944
+        }
+    },
+    {
+        "name": "nf_uq_nids_modified",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "Benign": {
+                    "count": 1544763,
+                    "proportion": 0.7011400607112512
+                },
+                "Reconnaissance": {
+                    "count": 482930,
+                    "proportion": 0.21919321573554296
+                },
+                "DoS": {
+                    "count": 61873,
+                    "proportion": 0.02808303861264624
+                },
+                "DDoS": {
+                    "count": 56844,
+                    "proportion": 0.025800466227550996
+                },
+                "Exploits": {
+                    "count": 24727,
+                    "proportion": 0.011223139265510055
+                },
+                "Fuzzers": {
+                    "count": 19330,
+                    "proportion": 0.00877353831853073
+                },
+                "Generic": {
+                    "count": 5555,
+                    "proportion": 0.002521314296918686
+                },
+                "Analysis": {
+                    "count": 1990,
+                    "proportion": 0.0009032251036666401
+                },
+                "Theft": {
+                    "count": 1909,
+                    "proportion": 0.0008664606647736763
+                },
+                "Backdoor": {
+                    "count": 1777,
+                    "proportion": 0.0008065482458369947
+                },
+                "Shellcode": {
+                    "count": 1365,
+                    "proportion": 0.0006195488776406852
+                },
+                "Worms": {
+                    "count": 153,
+                    "proportion": 6.944394013115373e-05
+                }
+            },
+            "Multi-class Gini Coefficient": 0.8359797677576779,
+            "Binary Classification Gini Coefficient": 0.20114006071125123,
+            "length": 2203216,
+            "num_benign": 1544763,
+            "percentage_of_benign_records": 70.11400607112512,
+            "num_attack": 658453,
+            "percentage_of_attack_records": 29.885993928874882,
+            "attacks": [
+                "Benign",
+                "Exploits",
+                "Reconnaissance",
+                "DoS",
+                "Generic",
+                "Shellcode",
+                "Backdoor",
+                "Fuzzers",
+                "Worms",
+                "Analysis",
+                "Theft",
+                "DDoS"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 396,
+            "total_mixed_class_pairs": 72,
+            "graph_measures": {
+                "number_of_nodes": 163,
+                "number_of_edges": 2203216,
+                "max_degree": 278276,
+                "avg_degree": 27033.325153374233,
+                "density": 83.4361887449822
+            },
+            "degree_entropy": 3.502845243004317,
+            "degree_relative_entropy": 0.6876751126212524,
+            "degree_alpha": 1.2490878260624034,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 2.010958656269929,
+            "pagerank_entropy": 3.738545002107444,
+            "pagerank_relative_entropy": 0.7339474561424945,
+            "pagerank_alpha": 5.033509976607287,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 1.9511271669192867,
+            "degree_kurtosis": 2.5546589272449483,
+            "total_nodes": 163,
+            "Number of Attackers": 12,
+            "Number of Victims": 18,
+            "Proportion of Attackers": 0.0736196319018405,
+            "Proportion of Victims": 0.11042944785276074,
+            "intersection between attacks and victims": 8,
+            "Mean Clustering Coefficient": 0.012679849121566913,
+            "Standard Deviation of Clustering Coefficients": 0.06930484990204136,
+            "Graph Degree Assortativity Coefficient": 0.5721042741716447,
+            "diameter": "not applicable",
+            "Mean Path Length": 1.807191011235955,
+            "Standard Deviation of Path Lengths": 0.8056778690539086
+        }
+    },
+    {
+        "name": "edge_iiot",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "Normal": {
+                    "count": 1435596,
+                    "proportion": 0.7065215626001208
+                },
+                "DDoS_UDP": {
+                    "count": 121567,
+                    "proportion": 0.05982860554125874
+                },
+                "DDoS_ICMP": {
+                    "count": 116434,
+                    "proportion": 0.057302424651352095
+                },
+                "SQL_injection": {
+                    "count": 50985,
+                    "proportion": 0.02509201883340937
+                },
+                "Password": {
+                    "count": 50083,
+                    "proportion": 0.02464810393711173
+                },
+                "DDoS_TCP": {
+                    "count": 50062,
+                    "proportion": 0.02463776888963695
+                },
+                "Vulnerability_scanner": {
+                    "count": 50031,
+                    "proportion": 0.024622512390983703
+                },
+                "DDoS_HTTP": {
+                    "count": 49839,
+                    "proportion": 0.024528020528357154
+                },
+                "Uploading": {
+                    "count": 37244,
+                    "proportion": 0.018329452769079112
+                },
+                "Backdoor": {
+                    "count": 24048,
+                    "proportion": 0.011835105793975257
+                },
+                "Port_Scanning": {
+                    "count": 20010,
+                    "proportion": 0.00984782380811065
+                },
+                "XSS": {
+                    "count": 15088,
+                    "proportion": 0.007425485538069639
+                },
+                "Ransomware": {
+                    "count": 9710,
+                    "proportion": 0.004778729094290575
+                },
+                "Fingerprinting": {
+                    "count": 860,
+                    "proportion": 0.0004232448013480839
+                },
+                "MITM": {
+                    "count": 364,
+                    "proportion": 0.00017914082289616576
+                }
+            },
+            "Multi-class Gini Coefficient": 0.7613883938729245,
+            "Binary Classification Gini Coefficient": 0.20652156260012067,
+            "length": 2031921,
+            "num_benign": 1435596,
+            "percentage_of_benign_records": 70.65215626001208,
+            "num_attack": 596325,
+            "percentage_of_attack_records": 29.347843739987923,
+            "attacks": [
+                "Normal",
+                "MITM",
+                "Uploading",
+                "Ransomware",
+                "SQL_injection",
+                "DDoS_HTTP",
+                "DDoS_TCP",
+                "Password",
+                "Port_Scanning",
+                "Vulnerability_scanner",
+                "Backdoor",
+                "XSS",
+                "Fingerprinting",
+                "DDoS_UDP",
+                "DDoS_ICMP"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 178054,
+            "total_mixed_class_pairs": 8,
+            "graph_measures": {
+                "number_of_nodes": 176695,
+                "number_of_edges": 2031921,
+                "max_degree": 1751388,
+                "avg_degree": 22.9991906958318,
+                "density": 6.508197985169785e-05
+            },
+            "degree_entropy": 0.26336556604293865,
+            "degree_relative_entropy": 0.021797850898271316,
+            "degree_alpha": 114.00711098262198,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 253.225802170565,
+            "pagerank_entropy": 0.7662886582771324,
+            "pagerank_relative_entropy": 0.06342304413264874,
+            "pagerank_alpha": 227.41048467637762,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 277.8348799768926,
+            "degree_kurtosis": 82845.6416164437,
+            "total_nodes": 176695,
+            "Number of Attackers": 137157,
+            "Number of Victims": 52404,
+            "Proportion of Attackers": 0.7762358866974165,
+            "Proportion of Victims": 0.29657885056170236,
+            "intersection between attacks and victims": 12886,
+            "Mean Clustering Coefficient": 2.5602362965427106e-05,
+            "Standard Deviation of Clustering Coefficients": 0.004844727603444551,
+            "Graph Degree Assortativity Coefficient": -0.35017238464860756,
+            "diameter": "not applicable"
+        }
+    },
+    {
+        "name": "nf_cse_cic_ids2018",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "Benign": {
+                    "count": 6682887,
+                    "proportion": 0.9136290800079457
+                },
+                "DDoS attacks-LOIC-HTTP": {
+                    "count": 297364,
+                    "proportion": 0.04065314851911797
+                },
+                "DoS attacks-Hulk": {
+                    "count": 108129,
+                    "proportion": 0.014782503249296175
+                },
+                "SSH-Bruteforce": {
+                    "count": 71148,
+                    "proportion": 0.00972676655828616
+                },
+                "Infilteration": {
+                    "count": 59505,
+                    "proportion": 0.008135031821707116
+                },
+                "DoS attacks-GoldenEye": {
+                    "count": 32582,
+                    "proportion": 0.00445434176648788
+                },
+                "DoS attacks-Slowloris": {
+                    "count": 17109,
+                    "proportion": 0.002339001082893657
+                },
+                "Bot": {
+                    "count": 15498,
+                    "proportion": 0.0021187584769820503
+                },
+                "DoS attacks-SlowHTTPTest": {
+                    "count": 14116,
+                    "proportion": 0.0019298228585029435
+                },
+                "FTP-BruteForce": {
+                    "count": 14116,
+                    "proportion": 0.0019298228585029435
+                },
+                "DDOS attack-LOIC-UDP": {
+                    "count": 1667,
+                    "proportion": 0.00022789846310034052
+                },
+                "DDOS attack-HOIC": {
+                    "count": 230,
+                    "proportion": 3.144369916801339e-05
+                },
+                "Brute Force -Web": {
+                    "count": 173,
+                    "proportion": 2.3651130243766595e-05
+                },
+                "Brute Force -XSS": {
+                    "count": 101,
+                    "proportion": 1.3807885286823272e-05
+                },
+                "SQL Injection": {
+                    "count": 36,
+                    "proportion": 4.921622478471661e-06
+                }
+            },
+            "Multi-class Gini Coefficient": 0.9041280427532231,
+            "Binary Classification Gini Coefficient": 0.4136290800079456,
+            "length": 7314661,
+            "num_benign": 6682887,
+            "percentage_of_benign_records": 91.36290800079456,
+            "num_attack": 631774,
+            "percentage_of_attack_records": 8.637091999205431,
+            "attacks": [
+                "Benign",
+                "Infilteration",
+                "Bot",
+                "Brute Force -Web",
+                "Brute Force -XSS",
+                "DDOS attack-HOIC",
+                "SQL Injection",
+                "DoS attacks-Hulk",
+                "DoS attacks-SlowHTTPTest",
+                "DDoS attacks-LOIC-HTTP",
+                "DDOS attack-LOIC-UDP",
+                "DoS attacks-GoldenEye",
+                "DoS attacks-Slowloris",
+                "FTP-BruteForce",
+                "SSH-Bruteforce"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 464278,
+            "total_mixed_class_pairs": 2147,
+            "graph_measures": {
+                "number_of_nodes": 92093,
+                "number_of_edges": 7314661,
+                "max_degree": 2056618,
+                "avg_degree": 158.8537891044922,
+                "density": 0.0008624733370134876
+            },
+            "degree_entropy": 2.7339827515446338,
+            "degree_relative_entropy": 0.2391819941638593,
+            "degree_alpha": 1.7804241507095657,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 177.7896389941227,
+            "pagerank_entropy": 2.9665700009076628,
+            "pagerank_relative_entropy": 0.2595298482563206,
+            "pagerank_alpha": 1.9156983218190446,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 225.01525590885825,
+            "degree_kurtosis": 57051.08391489221,
+            "total_nodes": 92093,
+            "Number of Attackers": 724,
+            "Number of Victims": 1488,
+            "Proportion of Attackers": 0.00786161814687327,
+            "Proportion of Victims": 0.016157579837772686,
+            "intersection between attacks and victims": 66,
+            "Mean Clustering Coefficient": 9.574336153796037e-05,
+            "Standard Deviation of Clustering Coefficients": 0.006364805157974324,
+            "Graph Degree Assortativity Coefficient": -0.13294248169616604,
+            "diameter": "not applicable"
+        }
+    },
+    {
+        "name": "nf_uq_nids",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "Benign": {
+                    "count": 8440723,
+                    "proportion": 0.7867175242815316
+                },
+                "DDoS": {
+                    "count": 582535,
+                    "proportion": 0.05429517033165785
+                },
+                "Reconnaissance": {
+                    "count": 482930,
+                    "proportion": 0.0450114870493061
+                },
+                "injection": {
+                    "count": 464479,
+                    "proportion": 0.043291761731875524
+                },
+                "DoS": {
+                    "count": 251127,
+                    "proportion": 0.023406290162613818
+                },
+                "password": {
+                    "count": 150519,
+                    "proportion": 0.014029122272740363
+                },
+                "xss": {
+                    "count": 99920,
+                    "proportion": 0.009313042855003137
+                },
+                "Brute Force": {
+                    "count": 85509,
+                    "proportion": 0.007969865707450592
+                },
+                "Infilteration": {
+                    "count": 59505,
+                    "proportion": 0.0055461630813346844
+                },
+                "Exploits": {
+                    "count": 24727,
+                    "proportion": 0.0023046798506371354
+                },
+                "scanning": {
+                    "count": 20814,
+                    "proportion": 0.0019399687148122027
+                },
+                "Fuzzers": {
+                    "count": 19330,
+                    "proportion": 0.0018016525058768078
+                },
+                "Backdoor": {
+                    "count": 19021,
+                    "proportion": 0.0017728521631806913
+                },
+                "Bot": {
+                    "count": 15498,
+                    "proportion": 0.0014444909744479445
+                },
+                "Generic": {
+                    "count": 5555,
+                    "proportion": 0.0005177537335822901
+                },
+                "Analysis": {
+                    "count": 1990,
+                    "proportion": 0.00018547793516269256
+                },
+                "Theft": {
+                    "count": 1909,
+                    "proportion": 0.00017792833076662318
+                },
+                "Shellcode": {
+                    "count": 1365,
+                    "proportion": 0.00012722481482265095
+                },
+                "mitm": {
+                    "count": 1288,
+                    "proportion": 0.00012004803039675781
+                },
+                "Worms": {
+                    "count": 153,
+                    "proportion": 1.4260363859242192e-05
+                },
+                "ransomware": {
+                    "count": 142,
+                    "proportion": 1.323510894125746e-05
+                }
+            },
+            "Multi-class Gini Coefficient": 0.8845952071001397,
+            "Binary Classification Gini Coefficient": 0.28671752428153163,
+            "length": 10729039,
+            "num_benign": 8440723,
+            "percentage_of_benign_records": 78.67175242815317,
+            "num_attack": 2288316,
+            "percentage_of_attack_records": 21.328247571846834,
+            "attacks": [
+                "Benign",
+                "Exploits",
+                "Reconnaissance",
+                "DoS",
+                "Generic",
+                "Shellcode",
+                "Backdoor",
+                "Fuzzers",
+                "Worms",
+                "Analysis",
+                "injection",
+                "DDoS",
+                "scanning",
+                "password",
+                "mitm",
+                "xss",
+                "ransomware",
+                "Infilteration",
+                "Bot",
+                "Brute Force",
+                "Theft"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 466642,
+            "total_mixed_class_pairs": 2277,
+            "graph_measures": {
+                "number_of_nodes": 93645,
+                "number_of_edges": 10729039,
+                "max_degree": 2056618,
+                "avg_degree": 229.1428052752416,
+                "density": 0.001223478307607757
+            },
+            "degree_entropy": 2.7492145700540833,
+            "degree_relative_entropy": 0.24016341492571835,
+            "degree_alpha": 1.7703596084258133,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 179.219767619123,
+            "pagerank_entropy": 3.0701688554596576,
+            "pagerank_relative_entropy": 0.26820105085914425,
+            "pagerank_alpha": 1.9137295749695893,
+            "pagerank_scale_free": 0,
+            "is_strongly_connected": false,
+            "degree_skewness": 174.18771497053797,
+            "degree_kurtosis": 39600.48475147817,
+            "total_nodes": 93645,
+            "Number of Attackers": 749,
+            "Number of Victims": 1651,
+            "Proportion of Attackers": 0.007998291419723424,
+            "Proportion of Victims": 0.01763041272892306,
+            "intersection between attacks and victims": 81,
+            "Mean Clustering Coefficient": 0.0006704149168668995,
+            "Standard Deviation of Clustering Coefficients": 0.02265764720880905,
+            "Graph Degree Assortativity Coefficient": -0.25629570112028727,
+            "diameter": "not applicable"
+        }
+    },
+    {
+        "name": "x_iiot",
+        "dataset": {
+            "Class Counts / Proportions": {
+                "Normal": {
+                    "count": 324810,
+                    "proportion": 0.5140911724020044
+                },
+                "RDOS": {
+                    "count": 110007,
+                    "proportion": 0.17411295096341645
+                },
+                "Reconnaissance": {
+                    "count": 99118,
+                    "proportion": 0.15687844840411894
+                },
+                "Weaponization": {
+                    "count": 50569,
+                    "proportion": 0.08003779593361338
+                },
+                "Lateral _movement": {
+                    "count": 23060,
+                    "proportion": 0.03649808329666642
+                },
+                "Exfiltration": {
+                    "count": 17202,
+                    "proportion": 0.027226367253653766
+                },
+                "Tampering": {
+                    "count": 3940,
+                    "proportion": 0.006236012497348903
+                },
+                "C&C": {
+                    "count": 2216,
+                    "proportion": 0.0035073613436865914
+                },
+                "Exploitation": {
+                    "count": 887,
+                    "proportion": 0.0014038941840478368
+                },
+                "crypto-ransomware": {
+                    "count": 5,
+                    "proportion": 7.913721443336171e-06
+                }
+            },
+            "Multi-class Gini Coefficient": 0.6833245227234597,
+            "Binary Classification Gini Coefficient": 0.014091172402004304,
+            "length": 631814,
+            "num_benign": 324810,
+            "percentage_of_benign_records": 51.40911724020044,
+            "num_attack": 307004,
+            "percentage_of_attack_records": 48.59088275979956,
+            "attacks": [
+                "Reconnaissance",
+                "Normal",
+                "RDOS",
+                "Weaponization",
+                "Lateral _movement",
+                "Exfiltration",
+                "Exploitation",
+                "Tampering",
+                "C&C",
+                "crypto-ransomware"
+            ]
+        },
+        "multi_di_graph": {
+            "total_same_class_pairs": 151,
+            "total_mixed_class_pairs": 9,
+            "graph_measures": {
+                "number_of_nodes": 112,
+                "number_of_edges": 631814,
+                "max_degree": 294296,
+                "avg_degree": 11282.392857142857,
+                "density": 50.82158944658945
+            },
+            "degree_entropy": 3.9151070182939103,
+            "degree_relative_entropy": 0.8297357115228735,
+            "degree_alpha": 1.2634432752521783,
+            "degree_scale_free": 0,
+            "pagerank_skewness": 3.549046744016129,
+            "pagerank_entropy": 3.842237213264426,
+            "pagerank_relative_entropy": 0.8142922819455588,
+            "pagerank_alpha": 2.2124698498339144,
+            "pagerank_scale_free": 1,
+            "is_strongly_connected": false,
+            "degree_skewness": 5.259451164429861,
+            "degree_kurtosis": 30.029821784241193,
+            "total_nodes": 112,
+            "Number of Attackers": 9,
+            "Number of Victims": 7,
+            "Proportion of Attackers": 0.08035714285714286,
+            "Proportion of Victims": 0.0625,
+            "intersection between attacks and victims": 3,
+            "Mean Clustering Coefficient": 0.08231785966748373,
+            "Standard Deviation of Clustering Coefficients": 0.21913981040162386,
+            "Graph Degree Assortativity Coefficient": 0.41073228626559,
+            "diameter": "not applicable",
+            "Mean Path Length": 1.6415441176470589,
+            "Standard Deviation of Path Lengths": 1.1765955241566228
+        }
+    }
+]

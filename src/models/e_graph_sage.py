@@ -21,10 +21,10 @@ class SAGELayer(nn.Module):
             self.lstm = nn.LSTM(ndim_out, ndim_out, batch_first=True)
 
     def message_func(self, edges):
-        # print(edges.data['h'].shape)
+        # if multi_graph then the node features of the source node are repeated
+        # after concatenation, for each edge, we have [src_nfeats_1 , ... , src_nfeats_n, efeats_1, ... efeats_m]
+        # after that we apply linear layer to create new featurescset called m.
         return {'m': self.W_msg(th.cat([edges.src['h'], edges.data['h']], 2))}
-        # to be experimented
-        # return {'m': self.W_msg(edges.data['h'])}
 
     def forward(self, g_dgl, nfeats, efeats):
         with g_dgl.local_scope():
@@ -32,55 +32,64 @@ class SAGELayer(nn.Module):
 
             # Neighbor sampling
             if self.num_neighbors:
-                sampled_g = dgl.sampling.sample_neighbors(
+                g = dgl.sampling.sample_neighbors(
                     g, g.nodes(), self.num_neighbors)
 
                 # Set node and edge features for the sampled graph
-                sampled_g.ndata['h'] = nfeats
+                g.ndata['h'] = nfeats
 
-                sampled_g.edata['h'] = efeats[sampled_g.edata[dgl.EID]]
+                g.edata['h'] = efeats[g.edata[dgl.EID]]
 
-                sampled_g.update_all(
-                    self.message_func, fn.mean('m', 'h_neigh'))
+                # # update_all: applies
+                # sampled_g.update_all(
+                #     self.message_func, fn.mean('m', 'h_neigh'))
 
-                h_new = self.activation(self.W_apply(
-                    th.cat([nfeats, sampled_g.ndata['h_neigh']], 2)))
+                # h_new = self.activation(self.W_apply(
+                #     th.cat([nfeats, sampled_g.ndata['h_neigh']], 2)))
             else:
 
                 g.ndata['h'] = nfeats
                 g.edata['h'] = efeats
 
-                if self.aggregation == "mean":
-                    g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
-                elif self.aggregation == "pool":
-                    g.update_all(self.message_func, fn.max('m', 'h_pool'))
-                    g.ndata['h_neigh'] = self.activation(
-                        self.pool_fc(g.ndata['h_pool']))
-                elif self.aggregation == "lstm":
-                    g.update_all(self.message_func, fn.copy_u('m', 'm_list'))
-                    m_list = g.ndata['m_list']
-                    batch_size = m_list.shape[0]
-                    max_neighbors = m_list.shape[1]
-                    lstm_out, _ = self.lstm(m_list.view(
-                        batch_size, max_neighbors, -1))
-                    # Use the final output of the LSTM
-                    g.ndata['h_neigh'] = lstm_out[:, -1, :]
+            if self.aggregation == "mean":
+                g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+            elif self.aggregation == "pool":
+                g.update_all(self.message_func, fn.max('m', 'h_pool'))
+                g.ndata['h_neigh'] = self.activation(
+                    self.pool_fc(g.ndata['h_pool']))
+            elif self.aggregation == "lstm":
+                g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
 
-                elif self.aggregation == "gcn":
-                    # GCN-style aggregation
-                    degs = g.in_degrees().float().clamp(min=1)  # Get in-degree of nodes
-                    norm = th.pow(degs, -0.5).unsqueeze(1)      # D^(-1/2)
-                    # Scale by D^(-1/2) for source
-                    g.ndata['h'] = nfeats * norm
-                    # Assign edge features (optional)
-                    g.edata['h'] = efeats
+                # TODO: we should take all edges as a list and feed them for each node to the LSTM layer,
+                # But this would be tricky, as number of neighbors may change...
+                # And we need all the lists to have the same length at the end
 
-                    g.update_all(fn.copy_u('h', 'm'), fn.sum('m', 'h_neigh'))
-                    g.ndata['h_neigh'] = g.ndata['h_neigh'] * \
-                        norm  # Scale by D^(-1/2) for destination
+                # g.update_all(self.message_func, fn.copy_u('m', 'm_list'))
+                # m_list = g.ndata['m_list']
+                # batch_size = m_list.shape[0]
+                # max_neighbors = m_list.shape[1]
+                # lstm_out, _ = self.lstm(m_list.view(
+                #     batch_size, max_neighbors, -1))
+                # # Use the final output of the LSTM
+                # g.ndata['h_neigh'] = lstm_out[:, -1, :]
 
-                h_new = self.activation(self.W_apply(
-                    th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
+            elif self.aggregation == "gcn":
+                g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+                # TODO: not ready
+                # GCN-style aggregation
+                # degs = g.in_degrees().float().clamp(min=1)  # Get in-degree of nodes
+                # norm = th.pow(degs, -0.5).unsqueeze(1)      # D^(-1/2)
+                # # Scale by D^(-1/2) for source
+                # g.ndata['h'] = nfeats * norm
+                # # Assign edge features (optional)
+                # g.edata['h'] = efeats
+
+                # g.update_all(fn.copy_u('h', 'm'), fn.sum('m', 'h_neigh'))
+                # g.ndata['h_neigh'] = g.ndata['h_neigh'] * \
+                #     norm  # Scale by D^(-1/2) for destination
+
+            h_new = self.activation(self.W_apply(
+                th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
             return h_new
 
 
