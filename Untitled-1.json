@@ -1,0 +1,122 @@
+{
+    "cic_ton_iot": {
+        "degree_skewness": 165.84559037923003,
+        "degree_entropy": 2.075544718849938,
+        "degree_relative_entropy": 0.174881640346603,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 196.95833802169486,
+        "pagerank_entropy": 0.12858588203724175,
+        "pagerank_relative_entropy": 0.010834413622534657,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "cic_ids_2017": {
+        "degree_skewness": 64.96066304330044,
+        "degree_entropy": 4.34334261896162,
+        "degree_relative_entropy": 0.44054771215050265,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 61.295119645121154,
+        "pagerank_entropy": 8.19133676106993,
+        "pagerank_relative_entropy": 0.8308519465605516,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "cic_bot_iot": {
+        "degree_skewness": 7.401542051892969,
+        "degree_entropy": 2.863554396676599,
+        "degree_relative_entropy": 0.5038293670359534,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 12.037411013666604,
+        "pagerank_entropy": 3.0261226972778843,
+        "pagerank_relative_entropy": 0.5324325198474089,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "cic_ton_iot_modified": {
+        "degree_skewness": 114.5717727659812,
+        "degree_entropy": 1.9570946434109768,
+        "degree_relative_entropy": 0.17646647157461223,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 240.246144421841,
+        "pagerank_entropy": 0.21472860347207362,
+        "pagerank_relative_entropy": 0.019361556748639933,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "ccd_inid_modified": {
+        "degree_skewness": 4.318782293210839,
+        "degree_entropy": 3.7753443308181303,
+        "degree_relative_entropy": 0.8145771501216145,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 4.847844550762225,
+        "pagerank_entropy": 3.261606386442822,
+        "pagerank_relative_entropy": 0.7037318459668305,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "nf_uq_nids_modified": {
+        "degree_skewness": 1.951127166919286,
+        "degree_entropy": 3.502845243004317,
+        "degree_relative_entropy": 0.6876751126212524,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 2.010958656269929,
+        "pagerank_entropy": 3.738545002107444,
+        "pagerank_relative_entropy": 0.7339474561424945,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "edge_iiot": {
+        "degree_skewness": 277.8348799768921,
+        "degree_entropy": 0.26336556604293865,
+        "degree_relative_entropy": 0.021797850898271316,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 253.225802170565,
+        "pagerank_entropy": 0.7662886582771324,
+        "pagerank_relative_entropy": 0.06342304413264874,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "nf_cse_cic_ids2018": {
+        "degree_skewness": 225.01525590885814,
+        "degree_entropy": 2.7339827515446338,
+        "degree_relative_entropy": 0.2391819941638593,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 177.7896389941227,
+        "pagerank_entropy": 2.9665700009076628,
+        "pagerank_relative_entropy": 0.2595298482563206,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "nf_uq_nids": {
+        "degree_skewness": 174.187714970538,
+        "degree_entropy": 2.7492145700540833,
+        "degree_relative_entropy": 0.24016341492571835,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 179.219767619123,
+        "pagerank_entropy": 3.0701688554596576,
+        "pagerank_relative_entropy": 0.26820105085914425,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    },
+    "x_iiot": {
+        "degree_skewness": 5.259451164429863,
+        "degree_entropy": 3.9151070182939103,
+        "degree_relative_entropy": 0.8297357115228735,
+        "degree_alpha": 0,
+        "degree_scale_free": 0,
+        "pagerank_skewness": 3.549046744016129,
+        "pagerank_entropy": 3.842237213264426,
+        "pagerank_relative_entropy": 0.8142922819455588,
+        "pagerank_alpha": 0,
+        "pagerank_scale_free": 0
+    }
+}

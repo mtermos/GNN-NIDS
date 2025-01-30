@@ -1,18 +1,31 @@
-import pandas as pd
 import os
+import json
 
-import networkx as nx
+
 from src.dataset.dataset_info import datasets
+from src.numpy_encoder import NumpyEncoder
 
-name = "cic_ids_2017_5_percent"
+my_datasets = [
+    "cic_ton_iot",
+    "cic_ids_2017",
+    "cic_bot_iot",
+    "cic_ton_iot_modified",
+    "ccd_inid_modified",
+    "nf_uq_nids_modified",
+    "edge_iiot",
+    "nf_cse_cic_ids2018",
+    "nf_uq_nids",
+    "x_iiot",
+]
+file_name = "df_properties_new.json"
+new_file_name = "all_df_properties.json"
 
-dataset = datasets[name]
-dataset_folder_path = os.path.join(
-    "datasets", name, "session_graphs", "graphs")
+all_props = []
+for ds in my_datasets:
+    dataset = datasets[ds]
+    with open(os.path.join("datasets", dataset.name, file_name), "r") as f:
+        prop = json.load(f)
+        all_props.append(prop)
 
-graphs = []
-for file in os.listdir(dataset_folder_path):
-    G = nx.read_gexf(file)
-    break
-
-G
+with open(os.path.join(new_file_name), "w") as f:
+    f.writelines(json.dumps(all_props, cls=NumpyEncoder))
