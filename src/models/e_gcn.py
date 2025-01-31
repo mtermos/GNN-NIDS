@@ -98,7 +98,7 @@ class MLPPredictor(nn.Module):
 
 
 class EGCN(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=False, num_class=2, norm=True):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=True, num_class=2, norm=False):
         super().__init__()
         self.gnn = GCN(ndim_in, edim, ndim_out,
                        num_layers, activation, dropout, norm=norm)

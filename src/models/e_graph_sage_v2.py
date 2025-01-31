@@ -23,7 +23,8 @@ class SAGELayer(nn.Module):
         # if multi_graph then the node features of the source node are repeated
         # after concatenation, for each edge, we have [src_nfeats_1 , ... , src_nfeats_n, efeats_1, ... efeats_m]
         # after that we apply linear layer to create new featurescset called m.
-        return {'m': self.W_msg(th.cat([edges.src['h'], edges.data['h']], 2))}
+        # return {'m': self.W_msg(th.cat([edges.src['h'], edges.data['h']], 2))}
+        return {'m': edges.data['h']}
 
     def forward(self, g_dgl, nfeats, efeats):
         with g_dgl.local_scope():

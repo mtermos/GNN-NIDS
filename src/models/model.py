@@ -11,9 +11,10 @@ class Model:
         aggregation=None,
         num_neighbors=None,
         norm=False,
-        trained_model=None,
-        best_model=None
+        models=None,
     ):
+        if models is None:
+            models = {}
         self.model_name = model_name
         self.model_class = model_class
         self.num_layers = num_layers
@@ -24,8 +25,7 @@ class Model:
         self.aggregation = aggregation
         self.num_neighbors = num_neighbors
         self.norm = norm
-        self.trained_model = trained_model
-        self.best_model = best_model
+        self.models = models
 
 
 class LineGraphModel:
@@ -39,9 +39,10 @@ class LineGraphModel:
         dropout=0.2,
         aggregator_type="mean",
         num_neighbors=None,
-        training_model=None,
-        best_model=None
+        models=None,
     ):
+        if models is None:
+            models = {}
         self.model_name = model_name
         self.model_class = model_class
         self.num_layers = num_layers
@@ -50,5 +51,4 @@ class LineGraphModel:
         self.dropout = dropout
         self.aggregator_type = aggregator_type
         self.num_neighbors = num_neighbors
-        self.training_model = training_model
-        self.best_model = best_model
+        self.models = models
