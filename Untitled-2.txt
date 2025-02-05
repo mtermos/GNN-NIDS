@@ -1,0 +1,110 @@
+=========================
+=========================
+==>> dataset: cic_ton_iot
+Number of attackers: 11
+Number of victims: 116
+Proportion of attackers: 0.0001
+Proportion of victims: 0.0008
+Number of non-attackers connected to attackers: 243
+Proportion of non-attackers connected to attackers: 0.0017
+Average Edge Class Diversity (Entropy): 0.0001
+Average Edge Class Diversity (Unique Class Ratio): 0.5253
+=========================
+=========================
+==>> dataset: cic_ids_2017
+Number of attackers: 10
+Number of victims: 11
+Proportion of attackers: 0.0005
+Proportion of victims: 0.0006
+Number of non-attackers connected to attackers: 16500
+Proportion of non-attackers connected to attackers: 0.8626
+Average Edge Class Diversity (Entropy): 0.0001
+Average Edge Class Diversity (Unique Class Ratio): 0.3379
+=========================
+=========================
+==>> dataset: cic_bot_iot
+Number of attackers: 8
+Number of victims: 8
+Proportion of attackers: 0.0272
+Proportion of victims: 0.0272
+Number of non-attackers connected to attackers: 275
+Proportion of non-attackers connected to attackers: 0.9354
+Average Edge Class Diversity (Entropy): 0.0329
+Average Edge Class Diversity (Unique Class Ratio): 0.5178
+=========================
+=========================
+==>> dataset: cic_ton_iot_modified
+Number of attackers: 8
+Number of victims: 60
+Proportion of attackers: 0.0001
+Proportion of victims: 0.0009
+Number of non-attackers connected to attackers: 180
+Proportion of non-attackers connected to attackers: 0.0027
+Average Edge Class Diversity (Entropy): 0.0001
+Average Edge Class Diversity (Unique Class Ratio): 0.4130
+=========================
+=========================
+==>> dataset: ccd_inid_modified
+Number of attackers: 49
+Number of victims: 51
+Proportion of attackers: 0.4757
+Proportion of victims: 0.4951
+Number of non-attackers connected to attackers: 20
+Proportion of non-attackers connected to attackers: 0.1942
+Average Edge Class Diversity (Entropy): 0.2622
+Average Edge Class Diversity (Unique Class Ratio): 0.4196
+=========================
+=========================
+==>> dataset: nf_uq_nids_modified
+Number of attackers: 12
+Number of victims: 18
+Proportion of attackers: 0.0736
+Proportion of victims: 0.1104
+Number of non-attackers connected to attackers: 126
+Proportion of non-attackers connected to attackers: 0.7730
+Average Edge Class Diversity (Entropy): 0.1259
+Average Edge Class Diversity (Unique Class Ratio): 0.0525
+=========================
+=========================
+==>> dataset: edge_iiot
+Number of attackers: 137157
+Number of victims: 52404
+Proportion of attackers: 0.7762
+Proportion of victims: 0.2966
+Number of non-attackers connected to attackers: 39538
+Proportion of non-attackers connected to attackers: 0.2238
+Average Edge Class Diversity (Entropy): 0.0001
+Average Edge Class Diversity (Unique Class Ratio): 0.9998
+=========================
+=========================
+==>> dataset: nf_cse_cic_ids2018
+Number of attackers: 724
+Number of victims: 1488
+Proportion of attackers: 0.0079
+Proportion of victims: 0.0162
+Number of non-attackers connected to attackers: 4213
+Proportion of non-attackers connected to attackers: 0.0457
+Average Edge Class Diversity (Entropy): 0.0022
+Average Edge Class Diversity (Unique Class Ratio): 0.6175
+=========================
+=========================
+==>> dataset: nf_uq_nids
+Number of attackers: 749
+Number of victims: 1651
+Proportion of attackers: 0.0080
+Proportion of victims: 0.0176
+Number of non-attackers connected to attackers: 4567
+Proportion of non-attackers connected to attackers: 0.0488
+Average Edge Class Diversity (Entropy): 0.0025
+Average Edge Class Diversity (Unique Class Ratio): 0.6170
+=========================
+=========================
+==>> dataset: x_iiot
+Number of attackers: 9
+Number of victims: 7
+Proportion of attackers: 0.0804
+Proportion of victims: 0.0625
+Number of non-attackers connected to attackers: 64
+Proportion of non-attackers connected to attackers: 0.5714
+Average Edge Class Diversity (Entropy): 0.0387
+Average Edge Class Diversity (Unique Class Ratio): 0.2089

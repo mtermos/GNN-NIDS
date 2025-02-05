@@ -1,0 +1,11 @@
+Dataset,e_gcn,e_graph_sage,e_gat,e_gcn_v2,e_graph_sage_v2,e_gat_v2
+cic_ids_2017,98.256,0,98.203,98.16,98.403,98.17
+cic_ton_iot_modified,0,0,0,0,0,0
+ccd_inid_modified,0,0,0,0,0,0
+x_iiot,94.18,0,0,94.121,93.41,94.527
+edge_iiot,0,0,0,95.0609,0,0
+cic_ton_iot,0,0,0,0,0,0
+nf_uq_nids,0,0,0,0,0,0
+nf_cse_cic_ids2018,0,0,0,0,0,0
+nf_uq_nids_modified,0,0,0,0,0,0
+cic_bot_iot,0,0,0,0,0,0

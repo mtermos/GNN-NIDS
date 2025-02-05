@@ -1,0 +1,111 @@
+
+==>> model: e_gcn
+
+Cases where e_gcn performs better:
+       Dataset   e_gcn  e_graph_sage  e_gat
+0  cic_ton_iot  84.831         82.85  84.66
+7   nf_uq_nids  85.620         84.27  81.83
+
+
+==>> model: e_graph_sage
+
+Cases where e_graph_sage performs better:
+                Dataset    e_gcn  e_graph_sage  e_gat
+1          cic_ids_2017  98.1600        98.403  98.17
+2  cic_ton_iot_modified  84.0500        84.400  83.78
+3     ccd_inid_modified  82.4600        93.660  78.66
+4   nf_uq_nids_modified  88.0100        90.980  88.27
+5             edge_iiot  95.0609        96.980  95.21
+
+
+==>> model: e_gat
+
+Cases where e_gat performs better:
+              Dataset   e_gcn  e_graph_sage   e_gat
+6  nf_cse_cic_ids2018  94.680         93.95  94.790
+8              x_iiot  94.121         93.41  94.527
+
+
+nf_uq_nids
+cic_ton_iot_modified
+ccd_inid_modified
+
+
+
+
+
+
+============================================================
+============================================================
+============================================================
+============================================================
+
+==>> model: e_gcn
+
+Cases where e_gcn performs better:
+                Dataset   e_gcn  e_gat
+0           cic_ton_iot  84.831  84.66
+2  cic_ton_iot_modified  84.050  83.78
+3     ccd_inid_modified  82.460  78.66
+7            nf_uq_nids  85.620  81.83
+==>> model: e_gat
+
+Cases where e_gat performs better:
+               Dataset    e_gcn   e_gat
+1         cic_ids_2017  98.1600  98.170
+4  nf_uq_nids_modified  88.0100  88.270
+5            edge_iiot  95.0609  95.210
+6   nf_cse_cic_ids2018  94.6800  94.790
+8               x_iiot  94.1210  94.527
+
+
+==>> feature: pagerank_alpha
+                Dataset  pagerank_alpha
+3  cic_ton_iot_modified        1.375214
+0           cic_ton_iot        1.407399
+4     ccd_inid_modified        1.687602
+8            nf_uq_nids        1.913730
+7    nf_cse_cic_ids2018        1.915698
+1          cic_ids_2017        2.193557
+9                x_iiot        2.212470
+2           cic_bot_iot        3.470760
+5   nf_uq_nids_modified        5.033510
+6             edge_iiot      227.410485
+
+==>> feature: pagerank_relative_entropy
+                Dataset  pagerank_relative_entropy
+0           cic_ton_iot                   0.010834
+3  cic_ton_iot_modified                   0.019362
+6             edge_iiot                   0.063423
+7    nf_cse_cic_ids2018                   0.259530
+8            nf_uq_nids                   0.268201
+2           cic_bot_iot                   0.532433
+4     ccd_inid_modified                   0.703732
+5   nf_uq_nids_modified                   0.733947
+9                x_iiot                   0.814292
+1          cic_ids_2017                   0.830852
+
+
+============================================================
+============================================================
+============================================================
+============================================================
+
+
+==>> model: e_gcn
+
+Cases where e_gcn performs better:
+              Dataset   e_gcn  e_graph_sage
+0         cic_ton_iot  84.831         82.85
+6  nf_cse_cic_ids2018  94.680         93.95
+7          nf_uq_nids  85.620         84.27
+8              x_iiot  94.121         93.41
+==>> model: e_graph_sage
+
+Cases where e_graph_sage performs better:
+                Dataset    e_gcn  e_graph_sage
+1          cic_ids_2017  98.1600        98.403
+2  cic_ton_iot_modified  84.0500        84.400
+3     ccd_inid_modified  82.4600        93.660
+4   nf_uq_nids_modified  88.0100        90.980
+5             edge_iiot  95.0609        96.980
