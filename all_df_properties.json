@@ -88,6 +88,11 @@
             "betweenness_relative_entropy": 0.0014548579012522921,
             "betweenness_alpha": 1.2628395344921874,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": 242.35130919423622,
+            "k_truss_entropy": 1.207600346682116,
+            "k_truss_relative_entropy": 0.10175021891502004,
+            "k_truss_alpha": 48.42441233242015,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 165.84559037923003,
             "degree_kurtosis": 31888.09125832449,
@@ -102,7 +107,9 @@
             "Graph Degree Assortativity Coefficient": 0.3112981737573859,
             "diameter": "not applicable",
             "Mean Path Length": 2.478833195917323,
-            "Standard Deviation of Path Lengths": 1.2253183471109323
+            "Standard Deviation of Path Lengths": 1.2253183471109323,
+            "class_diversity_entropy": 0.0001,
+            "class_diversity_ratio": 0.5253
         }
     },
     {
@@ -219,6 +226,11 @@
             "betweenness_relative_entropy": 0.5595358915885307,
             "betweenness_alpha": 1.4936521670361729,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": 44.973416369027674,
+            "k_truss_entropy": 1.7031360620144085,
+            "k_truss_relative_entropy": 0.17275005944174038,
+            "k_truss_alpha": 3.20411571378899,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 64.96066304330043,
             "degree_kurtosis": 4971.218852723598,
@@ -233,7 +245,9 @@
             "Graph Degree Assortativity Coefficient": 0.4661268147029133,
             "diameter": "not applicable",
             "Mean Path Length": 2.6831521780984993,
-            "Standard Deviation of Path Lengths": 0.776521382340659
+            "Standard Deviation of Path Lengths": 0.776521382340659,
+            "class_diversity_entropy": 0.0001,
+            "class_diversity_ratio": 0.3379
         }
     },
     {
@@ -300,6 +314,11 @@
             "betweenness_relative_entropy": 0.04784917759510749,
             "betweenness_alpha": 2.1759563810475475,
             "betweenness_scale_free": 1,
+            "k_truss_skewness": 6.266799962131627,
+            "k_truss_entropy": 0.16933920595035107,
+            "k_truss_relative_entropy": 0.029794462800272023,
+            "k_truss_alpha": 45.84760040322852,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 7.40154205189297,
             "degree_kurtosis": 61.60880286553903,
@@ -314,7 +333,9 @@
             "Graph Degree Assortativity Coefficient": 0.13454510727772168,
             "diameter": "not applicable",
             "Mean Path Length": 2.15975091660362,
-            "Standard Deviation of Path Lengths": 0.6389227631459695
+            "Standard Deviation of Path Lengths": 0.6389227631459695,
+            "class_diversity_entropy": 0.0329,
+            "class_diversity_ratio": 0.5178
         }
     },
     {
@@ -391,6 +412,11 @@
             "betweenness_relative_entropy": 0.0019976178795887995,
             "betweenness_alpha": 1.6391401113911952,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": 168.23928201893628,
+            "k_truss_entropy": 1.1622802199299949,
+            "k_truss_relative_entropy": 0.10479998506078386,
+            "k_truss_alpha": 38.50932047908724,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 114.57177276598121,
             "degree_kurtosis": 15320.122978370124,
@@ -405,7 +431,9 @@
             "Graph Degree Assortativity Coefficient": 0.20610127412201426,
             "diameter": "not applicable",
             "Mean Path Length": 2.29734372044162,
-            "Standard Deviation of Path Lengths": 1.1060023582525222
+            "Standard Deviation of Path Lengths": 1.1060023582525222,
+            "class_diversity_entropy": 0.0001,
+            "class_diversity_ratio": 0.413
         }
     },
     {
@@ -477,6 +505,11 @@
             "betweenness_relative_entropy": 0.18610671125556077,
             "betweenness_alpha": 1.4080549302743417,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": 3.433249536656545,
+            "k_truss_entropy": 0.2483328967315826,
+            "k_truss_relative_entropy": 0.053580888410573554,
+            "k_truss_alpha": 37.28989380353892,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 4.318782293210836,
             "degree_kurtosis": 17.91140499255244,
@@ -491,7 +524,9 @@
             "Graph Degree Assortativity Coefficient": 0.13914525615390078,
             "diameter": "not applicable",
             "Mean Path Length": 2.7826576576576576,
-            "Standard Deviation of Path Lengths": 1.120575849352944
+            "Standard Deviation of Path Lengths": 1.120575849352944,
+            "class_diversity_entropy": 0.2622,
+            "class_diversity_ratio": 0.4196
         }
     },
     {
@@ -593,6 +628,11 @@
             "betweenness_relative_entropy": 0.30109148780502987,
             "betweenness_alpha": 1.9132118566769343,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": 4.396178041901143,
+            "k_truss_entropy": 0.28853934817061083,
+            "k_truss_relative_entropy": 0.05664575937094661,
+            "k_truss_alpha": 19.798043256858183,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 1.9511271669192867,
             "degree_kurtosis": 2.5546589272449483,
@@ -607,7 +647,9 @@
             "Graph Degree Assortativity Coefficient": 0.5721042741716447,
             "diameter": "not applicable",
             "Mean Path Length": 1.807191011235955,
-            "Standard Deviation of Path Lengths": 0.8056778690539086
+            "Standard Deviation of Path Lengths": 0.8056778690539086,
+            "class_diversity_entropy": 0.1259,
+            "class_diversity_ratio": 0.0525
         }
     },
     {
@@ -724,6 +766,11 @@
             "betweenness_relative_entropy": 1.2255763317805807e-05,
             "betweenness_alpha": 1.1883484611210469,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": -3.5187210753360514,
+            "k_truss_entropy": 0.2416686361401745,
+            "k_truss_relative_entropy": 0.02000207155598027,
+            "k_truss_alpha": 58192.37320757373,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 277.8348799768926,
             "degree_kurtosis": 82845.6416164437,
@@ -736,7 +783,9 @@
             "Mean Clustering Coefficient": 2.5602362965427106e-05,
             "Standard Deviation of Clustering Coefficients": 0.004844727603444551,
             "Graph Degree Assortativity Coefficient": -0.35017238464860756,
-            "diameter": "not applicable"
+            "diameter": "not applicable",
+            "class_diversity_entropy": 0.0001,
+            "class_diversity_ratio": 0.9998
         }
     },
     {
@@ -853,6 +902,11 @@
             "betweenness_relative_entropy": 0.06403022124767646,
             "betweenness_alpha": 1.239414806826351,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": 105.9924594197619,
+            "k_truss_entropy": 0.06618087911223412,
+            "k_truss_relative_entropy": 0.00578982242394847,
+            "k_truss_alpha": 174.15473754808227,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 225.01525590885825,
             "degree_kurtosis": 57051.08391489221,
@@ -865,7 +919,9 @@
             "Mean Clustering Coefficient": 9.574336153796037e-05,
             "Standard Deviation of Clustering Coefficients": 0.006364805157974324,
             "Graph Degree Assortativity Coefficient": -0.13294248169616604,
-            "diameter": "not applicable"
+            "diameter": "not applicable",
+            "class_diversity_entropy": 0.0022,
+            "class_diversity_ratio": 0.6175
         }
     },
     {
@@ -1012,6 +1068,11 @@
             "betweenness_relative_entropy": 0.06431892620516338,
             "betweenness_alpha": 1.2366191422678834,
             "betweenness_scale_free": 0,
+            "k_truss_skewness": 106.7716521403442,
+            "k_truss_entropy": 0.07288973646115118,
+            "k_truss_relative_entropy": 0.006367436071459981,
+            "k_truss_alpha": 155.51139861579884,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 174.18771497053797,
             "degree_kurtosis": 39600.48475147817,
@@ -1024,7 +1085,9 @@
             "Mean Clustering Coefficient": 0.0006704149168668995,
             "Standard Deviation of Clustering Coefficients": 0.02265764720880905,
             "Graph Degree Assortativity Coefficient": -0.25629570112028727,
-            "diameter": "not applicable"
+            "diameter": "not applicable",
+            "class_diversity_entropy": 0.0025,
+            "class_diversity_ratio": 0.617
         }
     },
     {
@@ -1116,6 +1179,11 @@
             "betweenness_relative_entropy": 0.10733711568270599,
             "betweenness_alpha": 2.012183331127402,
             "betweenness_scale_free": 1,
+            "k_truss_skewness": 1.6612405782952357,
+            "k_truss_entropy": 0.7597904293018305,
+            "k_truss_relative_entropy": 0.1610237598919441,
+            "k_truss_alpha": 9.615088519544296,
+            "k_truss_scale_free": 0,
             "is_strongly_connected": false,
             "degree_skewness": 5.259451164429861,
             "degree_kurtosis": 30.029821784241193,
@@ -1130,7 +1198,9 @@
             "Graph Degree Assortativity Coefficient": 0.41073228626559,
             "diameter": "not applicable",
             "Mean Path Length": 1.6415441176470589,
-            "Standard Deviation of Path Lengths": 1.1765955241566228
+            "Standard Deviation of Path Lengths": 1.1765955241566228,
+            "class_diversity_entropy": 0.0387,
+            "class_diversity_ratio": 0.2089
         }
     }
 ]

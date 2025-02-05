@@ -8,8 +8,7 @@ import dgl
 class SAGELayer(nn.Module):
     def __init__(self, ndim_in, edim, ndim_out, activation, aggregation, num_neighbors=None):
         super(SAGELayer, self).__init__()
-        self.W_msg = nn.Linear(ndim_in + edim, ndim_out)
-        self.W_apply = nn.Linear(ndim_in + ndim_out, ndim_out)
+        self.W_apply = nn.Linear(ndim_in + edim, ndim_out)
         self.activation = activation
         self.aggregation = aggregation
         self.num_neighbors = num_neighbors
@@ -23,7 +22,6 @@ class SAGELayer(nn.Module):
         # if multi_graph then the node features of the source node are repeated
         # after concatenation, for each edge, we have [src_nfeats_1 , ... , src_nfeats_n, efeats_1, ... efeats_m]
         # after that we apply linear layer to create new featurescset called m.
-        # return {'m': self.W_msg(th.cat([edges.src['h'], edges.data['h']], 2))}
         return {'m': edges.data['h']}
 
     def forward(self, g_dgl, nfeats, efeats):

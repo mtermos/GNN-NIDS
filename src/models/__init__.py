@@ -1,8 +1,10 @@
 from src.models.e_gat_my_code import EGAT
+from src.models.e_gat_my_code_v2 import EGAT as EGATv2
 from src.models.e_gat_o1 import E_GATModel as EGATo1
 from src.models.e_gcn import EGCN
+from src.models.e_gcn_v2 import EGCN as EGCNv2
 from src.models.e_graph_sage import EGRAPHSAGE
-from src.models.e_gatv2 import EGATv2
+from src.models.e_graph_sage_v2 import EGRAPHSAGE as EGRAPHSAGEv2
 
 from src.models.gcn import GCN
 from src.models.graph_sage import GRAPHSAGE
