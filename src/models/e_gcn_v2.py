@@ -1,0 +1,105 @@
+import torch as th
+import torch.nn as nn
+import torch.nn.functional as F
+import dgl.function as fn
+import dgl
+
+
+class GCNLayer(nn.Module):
+    def __init__(self, ndim_in, edim, ndim_out, activation, norm=True):
+        super(GCNLayer, self).__init__()
+        self.W_apply = nn.Linear(ndim_in + edim, ndim_out)
+        self.activation = activation
+        self.norm = norm
+
+    def message_func(self, edges):
+        message = edges.data['h']
+        if self.norm:
+            norm_weight = edges.data['norm_weight'].unsqueeze(-1).unsqueeze(-1)
+            message = norm_weight * message
+        return {'m': message}
+
+    def forward(self, g_dgl, nfeats, efeats):
+        with g_dgl.local_scope():
+            g = g_dgl
+
+            g.ndata['h'] = nfeats
+            g.edata['h'] = efeats
+
+            g.update_all(self.message_func, fn.mean('m', 'h_neigh'))
+
+            # g.ndata['h'] = F.relu(self.W_apply(
+            #     th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
+
+            # g.ndata['h_neigh'] = g.ndata['h_neigh'] * \
+            #     g.ndata['norm'].unsqueeze(-1)
+
+            # g.ndata['h'] = self.activation(self.W_apply(g.ndata['h_neigh']))
+            g.ndata['h'] = self.activation(self.W_apply(
+                th.cat([g.ndata['h'], g.ndata['h_neigh']], 2)))
+            return g.ndata['h']
+
+
+class GCN(nn.Module):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers, activation, dropout, norm):
+        super(GCN, self).__init__()
+        self.layers = nn.ModuleList()
+        for layer in range(num_layers):
+            if layer == 0:
+                self.layers.append(
+                    GCNLayer(ndim_in, edim, ndim_out[layer], activation, norm=norm))
+            else:
+                self.layers.append(
+                    GCNLayer(ndim_out[layer-1], edim, ndim_out[layer], activation, norm=norm))
+
+        self.dropout = nn.Dropout(p=dropout)
+        self.norm = norm
+
+    def forward(self, g, nfeats, efeats):
+        for i, layer in enumerate(self.layers):
+            if i != 0:
+                nfeats = self.dropout(nfeats)
+            nfeats = layer(g, nfeats, efeats)
+        return nfeats.sum(1)
+
+
+class MLPPredictor(nn.Module):
+    def __init__(self, in_features, edim, out_classes, residual):
+        super().__init__()
+        self.residual = residual
+        if residual:
+            self.W = nn.Linear(in_features * 2 + edim, out_classes)
+        else:
+            self.W = nn.Linear(in_features * 2, out_classes)
+
+    def apply_edges(self, edges):
+        h_u = edges.src['h']
+        h_v = edges.dst['h']
+
+        if self.residual:
+            h_uv = edges.data['h']
+            h_uv = h_uv.view(h_uv.shape[0], h_uv.shape[2])
+            score = self.W(th.cat([h_u, h_v, h_uv], 1))
+        else:
+            score = self.W(th.cat([h_u, h_v], 1))
+
+        return {'score': score}
+
+    def forward(self, graph, h):
+        with graph.local_scope():
+            graph.ndata['h'] = h
+            graph.apply_edges(self.apply_edges)
+            return graph.edata['score']
+
+
+class EGCN(nn.Module):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=True, num_class=2, norm=False):
+        super().__init__()
+        print("e_gcn v2")
+        self.gnn = GCN(ndim_in, edim, ndim_out,
+                       num_layers, activation, dropout, norm=norm)
+        self.pred = MLPPredictor(ndim_out[-1], edim, num_class, residual)
+
+    def forward(self, g, nfeats, efeats):
+        h = self.gnn(g, nfeats, efeats)
+        return self.pred(g, h)
