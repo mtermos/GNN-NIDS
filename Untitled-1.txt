@@ -43,11 +43,12 @@ ccd_inid_modified
 ==>> model: e_gcn
 
 Cases where e_gcn performs better:
-                Dataset   e_gcn  e_gat
-0           cic_ton_iot  84.831  84.66
-2  cic_ton_iot_modified  84.050  83.78
-3     ccd_inid_modified  82.460  78.66
-7            nf_uq_nids  85.620  81.83
+                Dataset   e_gcn   e_gat
+0           cic_ton_iot  84.831  84.660
+2  cic_ton_iot_modified  84.050  83.780
+3     ccd_inid_modified  82.460  78.660
+6    nf_cse_cic_ids2018  94.680  94.024
+7            nf_uq_nids  85.620  81.830
 ==>> model: e_gat
 
 Cases where e_gat performs better:
@@ -55,7 +56,6 @@ Cases where e_gat performs better:
 1         cic_ids_2017  98.1600  98.170
 4  nf_uq_nids_modified  88.0100  88.270
 5            edge_iiot  95.0609  95.210
-6   nf_cse_cic_ids2018  94.6800  94.790
 8               x_iiot  94.1210  94.527
 
 
