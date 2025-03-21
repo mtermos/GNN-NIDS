@@ -1,14 +1,16 @@
 import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
+import dgl
 
 
 class GATLayer(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, activation):
+    def __init__(self, ndim_in, edim, ndim_out, activation, num_neighbors=None):
         super(GATLayer, self).__init__()
         self.W_apply = nn.Linear(ndim_in + edim, ndim_out)
         self.attn_fc = nn.Linear(2*ndim_in, 1)
         self.activation = activation
+        self.num_neighbors = num_neighbors
         self.reset_parameters()
 
     def edge_attention(self, edges):
@@ -29,8 +31,14 @@ class GATLayer(nn.Module):
 
     def forward(self, g, nfeats, efeats):
         with g.local_scope():
-            g.ndata['h'] = nfeats
-            g.edata['h'] = efeats
+            if self.num_neighbors:
+                g = dgl.sampling.sample_neighbors(
+                    g, g.nodes(), self.num_neighbors)
+                g.ndata['h'] = nfeats
+                g.edata['h'] = efeats[g.edata[dgl.EID]]
+            else:
+                g.ndata['h'] = nfeats
+                g.edata['h'] = efeats
             g.apply_edges(self.edge_attention)
             g.update_all(self.message_func, self.reduce_func)
             g.ndata['h'] = self.activation(self.W_apply(
@@ -39,16 +47,16 @@ class GATLayer(nn.Module):
 
 
 class GAT(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, num_layers, activation, dropout):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers, activation, dropout, num_neighbors):
         super().__init__()
         self.layers = nn.ModuleList()
         for layer in range(num_layers):
             if layer == 0:
                 self.layers.append(
-                    GATLayer(ndim_in, edim, ndim_out[layer], activation))
+                    GATLayer(ndim_in, edim, ndim_out[layer], activation, num_neighbors[layer] if num_neighbors else None))
             else:
                 self.layers.append(
-                    GATLayer(ndim_out[layer-1], edim, ndim_out[layer], activation))
+                    GATLayer(ndim_out[layer-1], edim, ndim_out[layer], activation, num_neighbors[layer] if num_neighbors else None))
 
         self.dropout = nn.Dropout(p=dropout)
 
@@ -90,13 +98,13 @@ class MLPPredictor(nn.Module):
 
 
 class EGAT(nn.Module):
-    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=False, num_class=2):
+    def __init__(self, ndim_in, edim, ndim_out, num_layers=2, activation=F.relu, dropout=0.2, residual=False, num_class=2, num_neighbors=None):
         super().__init__()
 
         print("e_gat v2")
 
         self.gnn = GAT(ndim_in, edim, ndim_out, num_layers,
-                       activation, dropout)
+                       activation, dropout, num_neighbors)
 
         self.pred = MLPPredictor(ndim_out[-1], edim, num_class, residual)
 

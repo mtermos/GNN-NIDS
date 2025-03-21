@@ -4,6 +4,7 @@ import json
 
 from src.dataset.dataset_info import datasets
 from src.numpy_encoder import NumpyEncoder
+from local_variables import local_datasets_path
 
 my_datasets = [
     "cic_ton_iot",
@@ -68,7 +69,7 @@ all_props = []
 for ds in my_datasets:
 
     dataset = datasets[ds]
-    with open(os.path.join("datasets", dataset.name, file_name), "r") as f:
+    with open(os.path.join(local_datasets_path, dataset.name, file_name), "r") as f:
         prop = json.load(f)
         prop["multi_di_graph"]["class_diversity_entropy"] = data[ds]["class_diversity_entropy"]
         prop["multi_di_graph"]["class_diversity_ratio"] = data[ds]["class_diversity_ratio"]

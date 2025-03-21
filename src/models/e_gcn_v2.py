@@ -68,9 +68,11 @@ class MLPPredictor(nn.Module):
         super().__init__()
         self.residual = residual
         if residual:
-            self.W = nn.Linear(in_features * 2 + edim, out_classes)
+            self.W1 = nn.Linear(in_features * 2 + edim, 128)
+            self.W2 = nn.Linear(128, out_classes)
         else:
-            self.W = nn.Linear(in_features * 2, out_classes)
+            self.W1 = nn.Linear(in_features * 2, 128)
+            self.W2 = nn.Linear(128, out_classes)
 
     def apply_edges(self, edges):
         h_u = edges.src['h']
@@ -79,9 +81,11 @@ class MLPPredictor(nn.Module):
         if self.residual:
             h_uv = edges.data['h']
             h_uv = h_uv.view(h_uv.shape[0], h_uv.shape[2])
-            score = self.W(th.cat([h_u, h_v, h_uv], 1))
+            score = F.relu(self.W1(th.cat([h_u, h_v, h_uv], 1)))
+            score = self.W2(score)
         else:
-            score = self.W(th.cat([h_u, h_v], 1))
+            score = F.relu(self.W1(th.cat([h_u, h_v], 1)))
+            score = self.W2(score)
 
         return {'score': score}
 

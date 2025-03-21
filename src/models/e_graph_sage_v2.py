@@ -76,26 +76,29 @@ class SAGE(nn.Module):
 
 
 class MLPPredictor(nn.Module):
-    def __init__(self, in_features, edim, out_classes, activation, residual):
+    def __init__(self, in_features, edim, out_classes, residual):
         super().__init__()
-        self.activation = activation
         self.residual = residual
         if residual:
-            self.W = nn.Linear(in_features * 2 + edim, 100)
+            self.W1 = nn.Linear(in_features * 2 + edim, 128)
+            self.W2 = nn.Linear(128, out_classes)
         else:
-            self.W = nn.Linear(in_features * 2, 100)
-        self.linear = nn.Linear(100, out_classes)
+            self.W1 = nn.Linear(in_features * 2, 128)
+            self.W2 = nn.Linear(128, out_classes)
 
     def apply_edges(self, edges):
         h_u = edges.src['h']
         h_v = edges.dst['h']
+
         if self.residual:
             h_uv = edges.data['h']
             h_uv = h_uv.view(h_uv.shape[0], h_uv.shape[2])
-            score = self.W(th.cat([h_u, h_v, h_uv], 1))
+            score = F.relu(self.W1(th.cat([h_u, h_v, h_uv], 1)))
+            score = self.W2(score)
         else:
-            score = self.W(th.cat([h_u, h_v], 1))
-        score = self.linear(score)
+            score = F.relu(self.W1(th.cat([h_u, h_v], 1)))
+            score = self.W2(score)
+
         return {'score': score}
 
     def forward(self, graph, h):
@@ -111,7 +114,7 @@ class EGRAPHSAGE(nn.Module):
         self.gnn = SAGE(ndim_in, edim, ndim_out, num_layers,
                         activation, aggregation, dropout, num_neighbors)
         self.pred = MLPPredictor(
-            ndim_out[-1], edim, num_class, activation, residual)
+            ndim_out[-1], edim, num_class, residual)
 
     def forward(self, g, nfeats, efeats):
         h = self.gnn(g, nfeats, efeats)
